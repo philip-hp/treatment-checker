@@ -24,7 +24,102 @@
             font-weight: 800;
             margin-bottom: 30px;
             color: #1a1a1a;
+            position: relative;
         }
+        .settings-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #999;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .settings-btn:hover { color: #555; background: #e8e8e8; }
+
+        /* Settings panel */
+        .settings-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .settings-panel label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 6px;
+        }
+        .settings-panel input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .settings-panel input[type="text"]:focus { border-color: #4a90d9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
+        .settings-btns {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .settings-btns button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .settings-btns button:first-child { background: #4a90d9; color: white; }
+        .settings-btns button:first-child:hover { background: #3a7bc8; }
+        .settings-btns button:last-child { background: #eee; color: #666; }
+        .settings-btns button:last-child:hover { background: #ddd; }
+        .data-status {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+        .data-status.success { background: #d4edda; color: #155724; }
+        .data-status.error { background: #f8d7da; color: #721c24; }
+        .data-status.loading { background: #cce5ff; color: #004085; }
+        .data-status.info { background: #fff3cd; color: #856404; }
+        .settings-note {
+            font-size: 11px;
+            color: #999;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* Loading overlay */
+        .loading-box {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 15px;
+        }
+        .loading-box .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #ddd;
+            border-top: 3px solid #4a90d9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .selector-container {
             display: flex;
             flex-direction: column;
@@ -53,12 +148,8 @@
             background-size: 16px;
             outline: none;
         }
-        .selector-row select:focus {
-            box-shadow: 0 0 0 2px #4a90d9;
-        }
-        .selector-row select option[value=""] {
-            color: #999;
-        }
+        .selector-row select:focus { box-shadow: 0 0 0 2px #4a90d9; }
+        .selector-row select option[value=""] { color: #999; }
         .remove-btn {
             width: 32px;
             height: 32px;
@@ -74,10 +165,7 @@
             flex-shrink: 0;
             transition: all 0.2s;
         }
-        .remove-btn:hover {
-            background: #ff6b6b;
-            color: white;
-        }
+        .remove-btn:hover { background: #ff6b6b; color: white; }
         .btn-row {
             display: flex;
             justify-content: center;
@@ -98,9 +186,7 @@
             justify-content: center;
             transition: all 0.2s;
         }
-        .add-btn:hover {
-            background: #ccc;
-        }
+        .add-btn:hover { background: #ccc; }
         .check-btn {
             padding: 12px 40px;
             border: none;
@@ -112,13 +198,8 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .check-btn:hover {
-            background: #3a7bc8;
-        }
-        .check-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
+        .check-btn:hover { background: #3a7bc8; }
+        .check-btn:disabled { background: #ccc; cursor: not-allowed; }
         .reset-btn {
             padding: 12px 24px;
             border: 1px solid #ccc;
@@ -129,39 +210,21 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .reset-btn:hover {
-            background: #f0f0f0;
-            border-color: #aaa;
-        }
+        .reset-btn:hover { background: #f0f0f0; border-color: #aaa; }
 
         /* Results */
-        .result-section {
-            margin-top: 20px;
-        }
+        .result-section { margin-top: 20px; }
         .same-day-label {
             text-align: center;
             font-size: 22px;
             font-weight: 800;
             margin-bottom: 24px;
         }
-        .same-day-label .status {
-            font-weight: 800;
-        }
-        .same-day-label .possible {
-            color: #2563eb;
-        }
-        .same-day-label .impossible {
-            color: #dc2626;
-        }
-        .day-groups {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .day-group {
-            flex: 1;
-            min-width: 260px;
-        }
+        .same-day-label .status { font-weight: 800; }
+        .same-day-label .possible { color: #2563eb; }
+        .same-day-label .impossible { color: #dc2626; }
+        .day-groups { display: flex; gap: 20px; flex-wrap: wrap; }
+        .day-group { flex: 1; min-width: 260px; }
         .day-group-title {
             text-align: center;
             font-size: 16px;
@@ -192,17 +255,11 @@
             justify-content: center;
         }
         .arrow-down {
-            width: 0;
-            height: 0;
+            width: 0; height: 0;
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
             border-top: 12px solid #aaa;
             margin: 6px 0;
-        }
-        .note-text {
-            font-size: 13px;
-            color: #888;
-            margin-top: 4px;
         }
         .warning-box {
             background: #fff3cd;
@@ -213,10 +270,7 @@
             font-size: 14px;
             color: #856404;
         }
-        .warning-box strong {
-            display: block;
-            margin-bottom: 4px;
-        }
+        .warning-box strong { display: block; margin-bottom: 4px; }
         .error-box {
             background: #f8d7da;
             border: 1px solid #f5c6cb;
@@ -243,9 +297,7 @@
             padding: 4px 8px;
             text-align: center;
         }
-        .interval-detail th {
-            background: #f0f0f0;
-        }
+        .interval-detail th { background: #f0f0f0; }
         .detail-toggle {
             background: none;
             border: 1px solid #ccc;
@@ -259,9 +311,7 @@
             margin-left: auto;
             margin-right: auto;
         }
-        .detail-toggle:hover {
-            background: #f0f0f0;
-        }
+        .detail-toggle:hover { background: #f0f0f0; }
         .hidden { display: none; }
 
         @media (max-width: 600px) {
@@ -273,53 +323,51 @@
 </head>
 <body>
 <div id="app">
-    <h1>施術順チェック表</h1>
-    <div id="selectors" class="selector-container"></div>
-    <div class="btn-row">
-        <button class="add-btn" onclick="addSelector()" title="施術を追加">+</button>
-        <button class="check-btn" onclick="checkSchedule()">チェック</button>
-        <button class="reset-btn" onclick="resetAll()">リセット</button>
+    <h1>施術順チェック表 <button class="settings-btn" onclick="toggleSettings()">&#9881;</button></h1>
+
+    <div id="settings-panel" class="settings-panel hidden">
+        <label>Google スプレッドシート URL:</label>
+        <input type="text" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/.../edit?gid=..." />
+        <div class="settings-btns">
+            <button onclick="saveAndReload()">保存・再読込</button>
+            <button onclick="resetURL()">デフォルトに戻す</button>
+        </div>
+        <div id="data-status"></div>
+        <div class="settings-note">
+            ※ スプレッドシートの共有設定を「リンクを知っている全員が閲覧可」にしてください。<br>
+            ※ 「施術間隔表(Dr確認済)」タブのURLを貼り付けてください。
+        </div>
     </div>
-    <div id="results" class="result-section"></div>
+
+    <div id="loading" class="loading-box">
+        <div class="spinner"></div><br>
+        データを読み込み中...
+    </div>
+
+    <div id="main-content" class="hidden">
+        <div id="selectors" class="selector-container"></div>
+        <div class="btn-row">
+            <button class="add-btn" onclick="addSelector()" title="施術を追加">+</button>
+            <button class="check-btn" onclick="checkSchedule()">チェック</button>
+            <button class="reset-btn" onclick="resetAll()">リセット</button>
+        </div>
+        <div id="results" class="result-section"></div>
+    </div>
 </div>
 
 <script>
-// ===== TREATMENT DATA =====
-const TREATMENTS = [
-    'ボトックス',
-    'ヒアルロン酸',
-    'スキンブースター・水光注射',
-    '脂肪溶解注射',
-    'ケロイド・炎症注射',
-    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）',
-    'ポテンツァ（アクネショット）',
-    'ポテンツァ（肝斑）',
-    'キュアジェット',
-    'HIFU',
-    'HIFUリニア',
-    'ザーフ',
-    'デンシティー',
-    'オンダリフト',
-    'インモードVリフト（FX+Forma）',
-    'Fx',
-    'Forma',
-    'アクアピール'
-];
-
-// Short display names for compact UI
-const SHORT_NAMES = {
-    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 'ポテンツァ（ドラデリ）',
-    'インモードVリフト（FX+Forma）': 'インモードVリフト'
-};
+// ===== DEFAULT CONFIG =====
+const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1EsVWeEsdzc5rpU6wTiT6zjCH_0BKGjQ-eZfBW_HevsU/edit?gid=265612214#gid=265612214';
 
 // Treatment ordering priority (lower = do first within same day)
+// Treatments not in this map default to 99
 const PRIORITY = {
     'HIFU': 10, 'HIFUリニア': 11,
     'ザーフ': 20, 'デンシティー': 21,
     'オンダリフト': 30, 'インモードVリフト（FX+Forma）': 31, 'Fx': 32, 'Forma': 33,
     'キュアジェット': 40,
     'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 50,
-    'ポテンツァ（アクネショット）': 51,
+    'ポデンツァ（アクネショット）': 51,
     'ポテンツァ（肝斑）': 52,
     'スキンブースター・水光注射': 60,
     '脂肪溶解注射': 70, 'ケロイド・炎症注射': 71,
@@ -327,35 +375,333 @@ const PRIORITY = {
     'アクアピール': 90
 };
 
-// Interval matrix: INTERVALS[next_treatment_index][first_treatment_index]
-// Values: "0"=同日可, "0B"=同日可(部位による), "1W","2W","1M","3M", "-"=データなし
-// Row=Before(next), Col=After(first)
-const INTERVALS = [
-    // Row 0: ボトックス (after each treatment, when can you do ボトックス?)
-    //        ボト  ヒア   スキン  脂肪  ケロ  ポドラ  ポアク  ポ肝   キュア HIFU  HIFUリ ザーフ デンシ オンダ インモ Fx    Forma アクア
-    /* 0*/  ["3M", "0",  "0",   "0",  "0",  "0B",  "0B",  "0B",  "0B", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1W"],
-    /* 1*/  ["0B", "0",  "0",   "0B", "0B", "0B",  "0B",  "0B",  "0B", "0B", "0",  "0",  "0B", "0B", "0B", "-",  "-",  "0B"],
-    /* 2*/  ["0",  "0",  "1M",  "0B", "0",  "1M",  "0B",  "1M",  "1M", "1W", "1M", "1W", "1W", "1W", "1W", "-",  "-",  "1W"],
-    /* 3*/  ["0",  "1M", "0B",  "1M", "0",  "1M",  "1M",  "1M",  "0B", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "0B"],
-    /* 4*/  ["0",  "0",  "0B",  "0",  "2W", "0B",  "0B",  "0B",  "0B", "0",  "0",  "0B", "0B", "0B", "0B", "-",  "-",  "0B"],
-    /* 5*/  ["0",  "0",  "0",   "0",  "0",  "1M",  "0",   "0",   "1M", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1M"],
-    /* 6*/  ["0",  "0",  "0",   "0",  "0",  "0B",  "1M",  "0B",  "0B", "0",  "0",  "0B", "0B", "0B", "0B", "-",  "-",  "0B"],
-    /* 7*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "1M",  "0",  "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1M"],
-    /* 8*/  ["0",  "0",  "1W",  "0",  "0",  "1M",  "0",   "1M",  "1M", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "2W"],
-    /* 9*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "3M", "0",  "0",  "0",  "0",  "0",  "0",  "0",  "0"],
-    /*10*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "1M", "0",  "0",  "0",  "0",  "0",  "0",  "0"],
-    /*11*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0B",  "0",  "0",  "1M", "3M", "3M", "0",  "0",  "0",  "0",  "0"],
-    /*12*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "1M", "3M", "3M", "0",  "0",  "0",  "-",  "0"],
-    /*13*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "2W", "2W", "2W", "2W", "4W", "0",  "2W", "2W", "0"],
-    /*14*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "2W", "2W", "-"],
-    /*15*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "2W", "0",  "-"],
-    /*16*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "0",  "1W", "0"],
-    /*17*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "-",  "-",  "-",  "-",  "2W"]
+// Short display names for compact UI
+const SHORT_NAMES = {
+    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 'ポテンツァ（ドラデリ）',
+    'インモードVリフト（FX+Forma）': 'インモードVリフト'
+};
+
+// ===== MUTABLE DATA (populated from sheet or fallback) =====
+let TREATMENTS = [];
+let INTERVALS = [];
+let dataSource = ''; // 'sheet' or 'fallback'
+
+// ===== FALLBACK DATA =====
+const FALLBACK_TREATMENTS = [
+    'ボトックス','ヒアルロン酸','スキンブースター・水光注射','脂肪溶解注射',
+    'ケロイド・炎症注射','ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）',
+    'ポテンツァ（アクネショット）','ポテンツァ（肝斑）','キュアジェット',
+    'HIFU','HIFUリニア','ザーフ','デンシティー','オンダリフト',
+    'インモードVリフト（FX+Forma）','Fx','Forma','アクアピール'
 ];
+const FALLBACK_INTERVALS = [
+    ["3M","0","0","0","0","0B","0B","0B","0B","1M","1M","1M","1M","1M","1M","-","-","1W"],
+    ["0B","0","0","0B","0B","0B","0B","0B","0B","0B","0","0","0B","0B","0B","-","-","0B"],
+    ["0","0","1M","0B","0","1M","0B","1M","1M","1W","1M","1W","1W","1W","1W","-","-","1W"],
+    ["0","1M","0B","1M","0","1M","1M","1M","0B","1M","1M","1M","1M","1M","1M","-","-","0B"],
+    ["0","0","0B","0","2W","0B","0B","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
+    ["0","0","0","0","0","1M","0","0","1M","1M","1M","1M","1M","1M","1M","-","-","1M"],
+    ["0","0","0","0","0","0B","1M","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
+    ["0","0","0","0","0","0","0","1M","0","1M","1M","1M","1M","1M","1M","-","-","1M"],
+    ["0","0","1W","0","0","1M","0","1M","1M","1M","1M","1M","1M","1M","1M","-","-","2W"],
+    ["0","0","0","0","0","0","0","0","0","3M","0","0","0","0","0","0","0","0"],
+    ["0","0","0","0","0","0","0","0","0","0","1M","0","0","0","0","0","0","0"],
+    ["0","0","0","0","0","0","0","0B","0","0","1M","3M","3M","0","0","0","0","0"],
+    ["0","0","0","0","0","0","0","0","0","0","1M","3M","3M","0","0","0","-","0"],
+    ["0","0","0","0","0","0","0","0","0","2W","2W","2W","2W","4W","0","2W","2W","0"],
+    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","2W","-"],
+    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","0","-"],
+    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","0","1W","0"],
+    ["0","0","0","0","0","0","0","0","0","0","0","0","0","-","-","-","-","2W"]
+];
+
+// ===== GOOGLE SHEETS FETCHING =====
+function extractSheetInfo(url) {
+    // Extract spreadsheet ID
+    const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (!idMatch) return null;
+    const sheetId = idMatch[1];
+
+    // Extract gid
+    let gid = '0';
+    const gidMatch = url.match(/gid=(\d+)/);
+    if (gidMatch) gid = gidMatch[1];
+
+    return { sheetId, gid };
+}
+
+function buildCSVUrl(sheetId, gid) {
+    return 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=out:csv&gid=' + gid;
+}
+
+// Simple CSV parser that handles quoted fields with commas and newlines
+function parseCSVText(text) {
+    const rows = [];
+    let row = [];
+    let field = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < text.length) {
+        const ch = text[i];
+        if (inQuotes) {
+            if (ch === '"') {
+                if (i + 1 < text.length && text[i + 1] === '"') {
+                    field += '"';
+                    i += 2;
+                } else {
+                    inQuotes = false;
+                    i++;
+                }
+            } else {
+                field += ch;
+                i++;
+            }
+        } else {
+            if (ch === '"') {
+                inQuotes = true;
+                i++;
+            } else if (ch === ',') {
+                row.push(field);
+                field = '';
+                i++;
+            } else if (ch === '\n' || (ch === '\r' && i + 1 < text.length && text[i + 1] === '\n')) {
+                row.push(field);
+                field = '';
+                rows.push(row);
+                row = [];
+                i += (ch === '\r') ? 2 : 1;
+            } else if (ch === '\r') {
+                row.push(field);
+                field = '';
+                rows.push(row);
+                row = [];
+                i++;
+            } else {
+                field += ch;
+                i++;
+            }
+        }
+    }
+    // Last field/row
+    if (field || row.length > 0) {
+        row.push(field);
+        rows.push(row);
+    }
+    return rows;
+}
+
+// Normalize interval values from spreadsheet display text to code
+function normalizeInterval(val) {
+    if (!val) return '-';
+    val = val.trim().replace(/\n/g, '').replace(/\r/g, '');
+    if (val === '' || val === '-') return '-';
+    if (val === '同日可') return '0';
+    if (val.indexOf('同日可') !== -1 && val.indexOf('部位') !== -1) return '0B';
+    // Standard interval codes
+    if (/^[0-9]+[WMwm]$/.test(val)) return val.toUpperCase();
+    // Handle compound values like "1M・2W" - take the shorter interval
+    if (val.indexOf('・') !== -1 || val.indexOf('〜') !== -1) {
+        var sep = val.indexOf('・') !== -1 ? '・' : '〜';
+        var parts = val.split(sep);
+        var minDays = Infinity;
+        var minCode = '-';
+        for (var p = 0; p < parts.length; p++) {
+            var norm = normalizeInterval(parts[p].trim());
+            var days = parseDays(norm);
+            if (days >= 0 && days < minDays) {
+                minDays = days;
+                minCode = norm;
+            }
+        }
+        if (minCode !== '-') return minCode;
+    }
+    return '-'; // Unknown format
+}
+
+function parseSheetData(csvRows) {
+    // Find the header row (contains "After" or "Before" or treatment names)
+    var headerRowIdx = -1;
+    var dataStartCol = -1;
+    var nameCol = -1;
+
+    for (var r = 0; r < Math.min(csvRows.length, 5); r++) {
+        for (var c = 0; c < csvRows[r].length; c++) {
+            var cell = (csvRows[r][c] || '').trim();
+            if (cell.indexOf('After') !== -1 || cell.indexOf('Before') !== -1 ||
+                cell.indexOf('after') !== -1 || cell.indexOf('before') !== -1) {
+                headerRowIdx = r;
+                nameCol = c;
+                dataStartCol = c + 1;
+                break;
+            }
+        }
+        if (headerRowIdx >= 0) break;
+    }
+
+    if (headerRowIdx < 0) {
+        // Fallback: assume row 1 (index 1) is header, column B (index 1) has names
+        headerRowIdx = 1;
+        nameCol = 1;
+        dataStartCol = 2;
+    }
+
+    // Extract column treatment names from header row
+    var colTreatments = [];
+    for (var c = dataStartCol; c < csvRows[headerRowIdx].length; c++) {
+        var name = (csvRows[headerRowIdx][c] || '').trim().replace(/\n/g, '');
+        if (name) colTreatments.push({ col: c, name: name });
+    }
+
+    if (colTreatments.length === 0) return null;
+
+    // Extract row data
+    var treatments = [];
+    var intervals = [];
+    for (var r = headerRowIdx + 1; r < csvRows.length; r++) {
+        var rowName = (csvRows[r][nameCol] || '').trim().replace(/\n/g, '');
+        if (!rowName) continue;
+        // Skip if it looks like a note or empty row
+        if (rowName.indexOf('※') === 0) continue;
+
+        treatments.push(rowName);
+        var rowIntervals = [];
+        for (var ci = 0; ci < colTreatments.length; ci++) {
+            var cellVal = (csvRows[r][colTreatments[ci].col] || '').trim();
+            rowIntervals.push(normalizeInterval(cellVal));
+        }
+        intervals.push(rowIntervals);
+    }
+
+    if (treatments.length === 0) return null;
+
+    return {
+        treatments: treatments,
+        colTreatments: colTreatments.map(function(ct) { return ct.name; }),
+        intervals: intervals
+    };
+}
+
+async function loadFromSheet() {
+    var url = getSavedURL();
+    var info = extractSheetInfo(url);
+    if (!info) {
+        showStatus('URLの形式が正しくありません', 'error');
+        useFallback();
+        return;
+    }
+
+    showStatus('スプレッドシートからデータを読み込み中...', 'loading');
+
+    try {
+        var csvUrl = buildCSVUrl(info.sheetId, info.gid);
+        var response = await fetch(csvUrl);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        var text = await response.text();
+        var rows = parseCSVText(text);
+        var data = parseSheetData(rows);
+
+        if (!data || data.treatments.length < 2) {
+            throw new Error('データの解析に失敗しました');
+        }
+
+        TREATMENTS = data.treatments;
+        INTERVALS = data.intervals;
+        dataSource = 'sheet';
+        showStatus('スプレッドシートから ' + TREATMENTS.length + ' 件の施術データを読み込みました', 'success');
+    } catch (e) {
+        console.error('Sheet load error:', e);
+        var msg = 'スプレッドシートの読み込みに失敗しました。';
+        if (e.message.indexOf('Failed to fetch') !== -1 || e.message.indexOf('NetworkError') !== -1) {
+            msg += '共有設定を「リンクを知っている全員が閲覧可」にしてください。';
+        } else {
+            msg += '(' + e.message + ')';
+        }
+        msg += ' 内蔵データを使用します。';
+        showStatus(msg, 'error');
+        useFallback();
+    }
+}
+
+function useFallback() {
+    TREATMENTS = FALLBACK_TREATMENTS.slice();
+    INTERVALS = FALLBACK_INTERVALS.map(function(r) { return r.slice(); });
+    dataSource = 'fallback';
+}
+
+// ===== URL MANAGEMENT =====
+function getSavedURL() {
+    try {
+        var saved = localStorage.getItem('treatment_checker_sheet_url');
+        if (saved) return saved;
+    } catch (e) {}
+    return DEFAULT_SHEET_URL;
+}
+
+function saveURL(url) {
+    try { localStorage.setItem('treatment_checker_sheet_url', url); } catch (e) {}
+}
+
+function clearSavedURL() {
+    try { localStorage.removeItem('treatment_checker_sheet_url'); } catch (e) {}
+}
+
+// ===== SETTINGS UI =====
+function toggleSettings() {
+    var panel = document.getElementById('settings-panel');
+    panel.classList.toggle('hidden');
+    if (!panel.classList.contains('hidden')) {
+        document.getElementById('sheet-url').value = getSavedURL();
+    }
+}
+
+function saveAndReload() {
+    var url = document.getElementById('sheet-url').value.trim();
+    if (!url) {
+        showStatus('URLを入力してください', 'error');
+        return;
+    }
+    var info = extractSheetInfo(url);
+    if (!info) {
+        showStatus('Google スプレッドシートのURLを入力してください', 'error');
+        return;
+    }
+    saveURL(url);
+    reloadData();
+}
+
+function resetURL() {
+    clearSavedURL();
+    document.getElementById('sheet-url').value = DEFAULT_SHEET_URL;
+    reloadData();
+}
+
+async function reloadData() {
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('results').innerHTML = '';
+    await loadFromSheet();
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('main-content').classList.remove('hidden');
+    rebuildSelectors();
+}
+
+function rebuildSelectors() {
+    document.getElementById('selectors').innerHTML = '';
+    document.getElementById('results').innerHTML = '';
+    selectorCount = 0;
+    for (var i = 0; i < 5; i++) addSelector();
+}
+
+function showStatus(msg, type) {
+    var el = document.getElementById('data-status');
+    el.textContent = msg;
+    el.className = 'data-status ' + type;
+}
 
 // ===== INTERVAL PARSING =====
 function parseDays(val) {
-    if (!val || val === '-') return -1; // no data
+    if (!val || val === '-') return -1;
     if (val === '0' || val === '0B') return 0;
     if (val === '1W') return 7;
     if (val === '2W') return 14;
@@ -388,76 +734,60 @@ function dayLabel(days) {
 }
 
 function getInterval(firstIdx, nextIdx) {
+    if (nextIdx >= INTERVALS.length || firstIdx >= (INTERVALS[nextIdx] || []).length) return '-';
     return INTERVALS[nextIdx][firstIdx];
 }
 
 function isSameDay(firstIdx, nextIdx) {
-    const val = getInterval(firstIdx, nextIdx);
+    var val = getInterval(firstIdx, nextIdx);
     return val === '0' || val === '0B';
 }
 
-// Find a valid same-day ordering for a group using topological sort
-// Returns ordered array if possible, null if not
+// ===== SCHEDULING ALGORITHMS =====
 function findSameDayOrdering(indices) {
-    if (indices.length <= 1) return indices.length === 1 ? [...indices] : [];
+    if (indices.length <= 1) return indices.length === 1 ? [indices[0]] : [];
 
-    // For each pair, check directional same-day compatibility
-    const n = indices.length;
-    const adj = {};
-    const inDegree = {};
-    indices.forEach(i => { adj[i] = []; inDegree[i] = 0; });
+    var n = indices.length;
+    var adj = {};
+    var inDegree = {};
+    indices.forEach(function(i) { adj[i] = []; inDegree[i] = 0; });
 
-    for (let i = 0; i < n; i++) {
-        for (let j = i + 1; j < n; j++) {
-            const a = indices[i], b = indices[j];
-            const abOk = isSameDay(a, b); // a first, then b OK same day
-            const baOk = isSameDay(b, a); // b first, then a OK same day
-
-            if (!abOk && !baOk) return null; // can't be same day in any order
-
-            if (abOk && !baOk) {
-                // a must come before b
-                adj[a].push(b);
-                inDegree[b]++;
-            } else if (!abOk && baOk) {
-                // b must come before a
-                adj[b].push(a);
-                inDegree[a]++;
-            }
-            // If both OK, no ordering constraint
+    for (var i = 0; i < n; i++) {
+        for (var j = i + 1; j < n; j++) {
+            var a = indices[i], b = indices[j];
+            var abOk = isSameDay(a, b);
+            var baOk = isSameDay(b, a);
+            if (!abOk && !baOk) return null;
+            if (abOk && !baOk) { adj[a].push(b); inDegree[b]++; }
+            else if (!abOk && baOk) { adj[b].push(a); inDegree[a]++; }
         }
     }
 
-    // Kahn's topological sort (priority-based for deterministic ordering)
-    const queue = indices.filter(i => inDegree[i] === 0);
-    const result = [];
+    var queue = indices.filter(function(i) { return inDegree[i] === 0; });
+    var result = [];
 
     while (queue.length > 0) {
-        queue.sort((a, b) => (PRIORITY[TREATMENTS[a]] || 99) - (PRIORITY[TREATMENTS[b]] || 99));
-        const node = queue.shift();
+        queue.sort(function(a, b) { return (PRIORITY[TREATMENTS[a]] || 99) - (PRIORITY[TREATMENTS[b]] || 99); });
+        var node = queue.shift();
         result.push(node);
-        for (const next of adj[node]) {
+        for (var k = 0; k < adj[node].length; k++) {
+            var next = adj[node][k];
             inDegree[next]--;
             if (inDegree[next] === 0) queue.push(next);
         }
     }
 
-    if (result.length !== indices.length) return null; // cycle = can't do same day
+    if (result.length !== indices.length) return null;
     return result;
 }
 
-// Check if a group can be done same day (has valid ordering)
 function canAllSameDay(indices) {
     if (indices.length <= 1) return true;
     return findSameDayOrdering(indices) !== null;
 }
 
-// ===== SCHEDULING ALGORITHM =====
 function findBestSchedule(selectedIndices) {
-    const n = selectedIndices.length;
-
-    // Check if all can be same day
-    const ordering = findSameDayOrdering(selectedIndices);
+    var ordering = findSameDayOrdering(selectedIndices);
     if (ordering) {
         return {
             sameDayPossible: true,
@@ -465,94 +795,87 @@ function findBestSchedule(selectedIndices) {
         };
     }
 
-    // Not all same day - find optimal grouping
-    let bestSchedule = null;
-    let bestScore = Infinity; // lower = better
+    var bestSchedule = null;
+    var bestScore = Infinity;
+    var subsets = getAllSubsets(selectedIndices);
 
-    const subsets = getAllSubsets(selectedIndices);
-
-    for (const firstGroup of subsets) {
+    for (var si = 0; si < subsets.length; si++) {
+        var firstGroup = subsets[si];
         if (firstGroup.length === 0) continue;
         if (!canAllSameDay(firstGroup)) continue;
 
-        const remaining = selectedIndices.filter(i => !firstGroup.includes(i));
+        var remaining = selectedIndices.filter(function(i) { return firstGroup.indexOf(i) === -1; });
         if (remaining.length === 0) continue;
 
-        // Calculate wait: for each remaining treatment, the max interval FROM first group
-        const waitMap = {};
-        for (const rIdx of remaining) {
-            let maxWait = 0;
-            for (const fIdx of firstGroup) {
-                const days = parseDays(getInterval(fIdx, rIdx));
+        var waitMap = {};
+        for (var ri = 0; ri < remaining.length; ri++) {
+            var rIdx = remaining[ri];
+            var maxWait = 0;
+            for (var fi = 0; fi < firstGroup.length; fi++) {
+                var days = parseDays(getInterval(firstGroup[fi], rIdx));
                 if (days > 0) maxWait = Math.max(maxWait, days);
             }
             waitMap[rIdx] = maxWait;
         }
 
-        // Group remaining by wait time
-        const dayGroups = {};
-        for (const rIdx of remaining) {
-            const d = waitMap[rIdx];
+        var dayGroups = {};
+        for (var ri = 0; ri < remaining.length; ri++) {
+            var d = waitMap[remaining[ri]];
             if (!dayGroups[d]) dayGroups[d] = [];
-            dayGroups[d].push(rIdx);
+            dayGroups[d].push(remaining[ri]);
         }
 
-        // Check each later group has valid same-day ordering
-        let valid = true;
-        for (const dayKey in dayGroups) {
-            if (!canAllSameDay(dayGroups[dayKey])) {
-                valid = false;
-                break;
-            }
+        var valid = true;
+        for (var dayKey in dayGroups) {
+            if (!canAllSameDay(dayGroups[dayKey])) { valid = false; break; }
         }
         if (!valid) continue;
 
-        // Score: minimize max wait, then maximize first-day group size
-        const maxDay = Math.max(...Object.keys(dayGroups).map(Number));
-        const numGroups = Object.keys(dayGroups).length;
-        const score = maxDay * 10000 + numGroups * 100 - firstGroup.length;
+        var maxDay = Math.max.apply(null, Object.keys(dayGroups).map(Number));
+        var numGroups = Object.keys(dayGroups).length;
+        var score = maxDay * 10000 + numGroups * 100 - firstGroup.length;
 
         if (score < bestScore) {
             bestScore = score;
-            const firstOrdering = findSameDayOrdering(firstGroup);
-            const groups = [{ day: 0, label: '本日', treatments: orderToGroups(firstOrdering) }];
+            var firstOrdering = findSameDayOrdering(firstGroup);
+            var groups = [{ day: 0, label: '本日', treatments: orderToGroups(firstOrdering) }];
 
-            const sortedDays = Object.keys(dayGroups).map(Number).sort((a, b) => a - b);
-            for (const d of sortedDays) {
-                const laterOrdering = findSameDayOrdering(dayGroups[d]);
+            var sortedDays = Object.keys(dayGroups).map(Number).sort(function(a, b) { return a - b; });
+            for (var di = 0; di < sortedDays.length; di++) {
+                var dd = sortedDays[di];
+                var laterOrdering = findSameDayOrdering(dayGroups[dd]);
                 groups.push({
-                    day: d,
-                    label: '本日より' + dayLabel(d),
-                    treatments: orderToGroups(laterOrdering || dayGroups[d])
+                    day: dd,
+                    label: '本日より' + dayLabel(dd),
+                    treatments: orderToGroups(laterOrdering || dayGroups[dd])
                 });
             }
-            bestSchedule = { sameDayPossible: false, groups };
+            bestSchedule = { sameDayPossible: false, groups: groups };
         }
     }
 
     if (!bestSchedule) {
-        // Fallback: each treatment individually
-        const groups = selectedIndices.map((idx, i) => ({
-            day: i * 30,
-            label: i === 0 ? '本日' : dayLabel(i * 30),
-            treatments: [{ indices: [idx] }]
-        }));
-        bestSchedule = { sameDayPossible: false, groups };
+        var groups = selectedIndices.map(function(idx, i) {
+            return {
+                day: i * 30,
+                label: i === 0 ? '本日' : dayLabel(i * 30),
+                treatments: [{ indices: [idx] }]
+            };
+        });
+        bestSchedule = { sameDayPossible: false, groups: groups };
     }
 
     return bestSchedule;
 }
 
-// Convert an ordered list of treatment indices into grouped display format
 function orderToGroups(orderedIndices) {
     if (!orderedIndices || orderedIndices.length === 0) return [];
-    const groups = [];
-    let currentGroup = [orderedIndices[0]];
+    var groups = [];
+    var currentGroup = [orderedIndices[0]];
 
-    for (let i = 1; i < orderedIndices.length; i++) {
-        const prev = orderedIndices[i - 1];
-        const curr = orderedIndices[i];
-        // Group together if same priority (can be done simultaneously)
+    for (var i = 1; i < orderedIndices.length; i++) {
+        var prev = orderedIndices[i - 1];
+        var curr = orderedIndices[i];
         if ((PRIORITY[TREATMENTS[curr]] || 99) === (PRIORITY[TREATMENTS[prev]] || 99)) {
             currentGroup.push(curr);
         } else {
@@ -565,11 +888,11 @@ function orderToGroups(orderedIndices) {
 }
 
 function getAllSubsets(arr) {
-    const result = [];
-    const n = arr.length;
-    for (let mask = 0; mask < (1 << n); mask++) {
-        const subset = [];
-        for (let i = 0; i < n; i++) {
+    var result = [];
+    var n = arr.length;
+    for (var mask = 0; mask < (1 << n); mask++) {
+        var subset = [];
+        for (var i = 0; i < n; i++) {
             if (mask & (1 << i)) subset.push(arr[i]);
         }
         result.push(subset);
@@ -577,9 +900,8 @@ function getAllSubsets(arr) {
     return result;
 }
 
-
 // ===== UI =====
-let selectorCount = 0;
+var selectorCount = 0;
 
 function getDisplayName(name) {
     return SHORT_NAMES[name] || name;
@@ -587,32 +909,31 @@ function getDisplayName(name) {
 
 function addSelector() {
     selectorCount++;
-    const container = document.getElementById('selectors');
-    const row = document.createElement('div');
+    var container = document.getElementById('selectors');
+    var row = document.createElement('div');
     row.className = 'selector-row';
     row.id = 'selector-row-' + selectorCount;
 
-    const select = document.createElement('select');
+    var select = document.createElement('select');
     select.id = 'select-' + selectorCount;
 
-    const defaultOpt = document.createElement('option');
+    var defaultOpt = document.createElement('option');
     defaultOpt.value = '';
     defaultOpt.textContent = '施術を選択してください';
     select.appendChild(defaultOpt);
 
-    TREATMENTS.forEach((t, i) => {
-        const opt = document.createElement('option');
+    TREATMENTS.forEach(function(t, i) {
+        var opt = document.createElement('option');
         opt.value = i;
         opt.textContent = t;
         select.appendChild(opt);
     });
 
-    const removeBtn = document.createElement('button');
+    var removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
-    removeBtn.textContent = '×';
-    removeBtn.onclick = () => {
+    removeBtn.textContent = '\u00D7';
+    removeBtn.onclick = function() {
         row.remove();
-        // Clear results when selectors change
         document.getElementById('results').innerHTML = '';
     };
 
@@ -622,57 +943,54 @@ function addSelector() {
 }
 
 function checkSchedule() {
-    const selects = document.querySelectorAll('.selector-row select');
-    const selectedIndices = [];
-    const seen = new Set();
-    let hasDuplicate = false;
+    var selects = document.querySelectorAll('.selector-row select');
+    var selectedIndices = [];
+    var seen = {};
+    var hasDuplicate = false;
 
-    selects.forEach(sel => {
+    selects.forEach(function(sel) {
         if (sel.value !== '') {
-            const idx = parseInt(sel.value);
-            if (seen.has(idx)) {
+            var idx = parseInt(sel.value);
+            if (seen[idx]) {
                 hasDuplicate = true;
             } else {
-                seen.add(idx);
+                seen[idx] = true;
                 selectedIndices.push(idx);
             }
         }
     });
 
-    const resultsDiv = document.getElementById('results');
+    var resultsDiv = document.getElementById('results');
 
     if (selectedIndices.length < 2) {
         resultsDiv.innerHTML = '<div class="error-box">2つ以上の施術を選択してください</div>';
         return;
     }
-
     if (hasDuplicate) {
         resultsDiv.innerHTML = '<div class="error-box">同じ施術が重複しています</div>';
         return;
     }
 
-    // Check for unknown intervals
-    let unknownPairs = [];
-    for (let i = 0; i < selectedIndices.length; i++) {
-        for (let j = i + 1; j < selectedIndices.length; j++) {
-            const a = selectedIndices[i], b = selectedIndices[j];
-            const ab = getInterval(a, b);
-            const ba = getInterval(b, a);
+    var unknownPairs = [];
+    for (var i = 0; i < selectedIndices.length; i++) {
+        for (var j = i + 1; j < selectedIndices.length; j++) {
+            var a = selectedIndices[i], b = selectedIndices[j];
+            var ab = getInterval(a, b);
+            var ba = getInterval(b, a);
             if (ab === '-' || ba === '-') {
                 unknownPairs.push([TREATMENTS[a], TREATMENTS[b]]);
             }
         }
     }
 
-    const schedule = findBestSchedule(selectedIndices);
+    var schedule = findBestSchedule(selectedIndices);
     renderResults(schedule, unknownPairs);
 }
 
 function renderResults(schedule, unknownPairs) {
-    const resultsDiv = document.getElementById('results');
-    let html = '';
+    var resultsDiv = document.getElementById('results');
+    var html = '';
 
-    // Same-day status
     html += '<div class="same-day-label">同日施術：';
     if (schedule.sameDayPossible) {
         html += '<span class="status possible">可能</span>';
@@ -681,13 +999,12 @@ function renderResults(schedule, unknownPairs) {
     }
     html += '</div>';
 
-    // Day groups
     if (schedule.groups.length === 1) {
-        // Single day - no day label needed
         html += renderScheduleBox(schedule.groups[0].treatments);
     } else {
         html += '<div class="day-groups">';
-        for (const group of schedule.groups) {
+        for (var g = 0; g < schedule.groups.length; g++) {
+            var group = schedule.groups[g];
             html += '<div class="day-group">';
             html += '<div class="day-group-title">' + group.label + '</div>';
             html += renderScheduleBox(group.treatments);
@@ -696,38 +1013,32 @@ function renderResults(schedule, unknownPairs) {
         html += '</div>';
     }
 
-    // Warnings for unknown intervals
     if (unknownPairs.length > 0) {
-        html += '<div class="warning-box"><strong>⚠ 注意</strong>';
+        html += '<div class="warning-box"><strong>\u26A0 注意</strong>';
         html += '以下の組み合わせは間隔データがありません：<br>';
-        unknownPairs.forEach(pair => {
-            html += '・' + getDisplayName(pair[0]) + ' × ' + getDisplayName(pair[1]) + '<br>';
+        unknownPairs.forEach(function(pair) {
+            html += '\u30FB' + getDisplayName(pair[0]) + ' \u00D7 ' + getDisplayName(pair[1]) + '<br>';
         });
         html += '</div>';
     }
 
-    // Detail toggle button
     html += '<button class="detail-toggle" onclick="toggleDetail()">詳細を表示</button>';
     html += '<div id="detail-section" class="interval-detail hidden"></div>';
 
     resultsDiv.innerHTML = html;
-
-    // Populate detail section
     renderDetailTable();
 }
 
 function renderScheduleBox(treatmentGroups) {
-    let html = '<div class="schedule-box">';
-    treatmentGroups.forEach((group, gIdx) => {
-        if (gIdx > 0) {
-            html += '<div class="arrow-down"></div>';
-        }
+    var html = '<div class="schedule-box">';
+    treatmentGroups.forEach(function(group, gIdx) {
+        if (gIdx > 0) html += '<div class="arrow-down"></div>';
         if (group.indices.length === 1) {
             html += '<div class="treatment-item">' + getDisplayName(TREATMENTS[group.indices[0]]) + '</div>';
         } else {
             html += '<div class="treatment-item simultaneous">';
-            group.indices.forEach((idx, i) => {
-                if (i > 0) html += '<span style="color:#999;margin:0 4px">·</span>';
+            group.indices.forEach(function(idx, i) {
+                if (i > 0) html += '<span style="color:#999;margin:0 4px">\u00B7</span>';
                 html += '<span>' + getDisplayName(TREATMENTS[idx]) + '</span>';
             });
             html += '</div>';
@@ -738,8 +1049,8 @@ function renderScheduleBox(treatmentGroups) {
 }
 
 function toggleDetail() {
-    const section = document.getElementById('detail-section');
-    const btn = document.querySelector('.detail-toggle');
+    var section = document.getElementById('detail-section');
+    var btn = document.querySelector('.detail-toggle');
     if (section.classList.contains('hidden')) {
         section.classList.remove('hidden');
         btn.textContent = '詳細を非表示';
@@ -750,28 +1061,27 @@ function toggleDetail() {
 }
 
 function renderDetailTable() {
-    const selects = document.querySelectorAll('.selector-row select');
-    const selectedIndices = [];
-    selects.forEach(sel => {
+    var selects = document.querySelectorAll('.selector-row select');
+    var selectedIndices = [];
+    selects.forEach(function(sel) {
         if (sel.value !== '') {
-            const idx = parseInt(sel.value);
-            if (!selectedIndices.includes(idx)) selectedIndices.push(idx);
+            var idx = parseInt(sel.value);
+            if (selectedIndices.indexOf(idx) === -1) selectedIndices.push(idx);
         }
     });
-
     if (selectedIndices.length < 2) return;
 
-    const section = document.getElementById('detail-section');
-    let html = '<p style="margin-bottom:8px">選択した施術間の間隔一覧：</p>';
-    html += '<table><tr><th>先の施術 → 後の施術</th><th>必要間隔</th></tr>';
+    var section = document.getElementById('detail-section');
+    var html = '<p style="margin-bottom:8px">選択した施行間の間隔一覧：</p>';
+    html += '<table><tr><th>先の施衣 \u2192 後の施術</th><th>必要間隔</th></tr>';
 
-    for (let i = 0; i < selectedIndices.length; i++) {
-        for (let j = 0; j < selectedIndices.length; j++) {
+    for (var i = 0; i < selectedIndices.length; i++) {
+        for (var j = 0; j < selectedIndices.length; j++) {
             if (i === j) continue;
-            const first = selectedIndices[i];
-            const next = selectedIndices[j];
-            const val = getInterval(first, next);
-            html += '<tr><td>' + getDisplayName(TREATMENTS[first]) + ' → ' + getDisplayName(TREATMENTS[next]) + '</td>';
+            var first = selectedIndices[i];
+            var next = selectedIndices[j];
+            var val = getInterval(first, next);
+            html += '<tr><td>' + getDisplayName(TREATMENTS[first]) + ' \u2192 ' + getDisplayName(TREATMENTS[next]) + '</td>';
             html += '<td>' + intervalLabel(val) + '</td></tr>';
         }
     }
@@ -783,11 +1093,23 @@ function resetAll() {
     document.getElementById('selectors').innerHTML = '';
     document.getElementById('results').innerHTML = '';
     selectorCount = 0;
-    for (let i = 0; i < 5; i++) addSelector();
+    for (var i = 0; i < 5; i++) addSelector();
 }
 
-// Initialize with 5 selectors
-for (let i = 0; i < 5; i++) addSelector();
+// ===== INITIALIZATION =====
+async function init() {
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('main-content').classList.add('hidden');
+
+    await loadFromSheet();
+
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('main-content').classList.remove('hidden');
+
+    for (var i = 0; i < 5; i++) addSelector();
+}
+
+init();
 </script>
 </body>
 </html>

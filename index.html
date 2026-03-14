@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>施術順チェック表</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 30px 16px;
+        }
+        #app {
+            width: 100%;
+            max-width: 640px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+        .selector-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .selector-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .selector-row select {
+            flex: 1;
+            padding: 14px 40px 14px 20px;
+            font-size: 15px;
+            border: none;
+            border-radius: 25px;
+            background: #e8e8e8;
+            color: #333;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23333' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 16px;
+            outline: none;
+        }
+        .selector-row select:focus {
+            box-shadow: 0 0 0 2px #4a90d9;
+        }
+        .selector-row select option[value=""] {
+            color: #999;
+        }
+        .remove-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #ddd;
+            color: #888;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .remove-btn:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .add-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: #ddd;
+            color: #666;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .add-btn:hover {
+            background: #ccc;
+        }
+        .check-btn {
+            padding: 12px 40px;
+            border: none;
+            border-radius: 25px;
+            background: #4a90d9;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .check-btn:hover {
+            background: #3a7bc8;
+        }
+        .check-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .reset-btn {
+            padding: 12px 24px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            background: white;
+            color: #666;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            background: #f0f0f0;
+            border-color: #aaa;
+        }
+
+        /* Results */
+        .result-section {
+            margin-top: 20px;
+        }
+        .same-day-label {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+        .same-day-label .status {
+            font-weight: 800;
+        }
+        .same-day-label .possible {
+            color: #2563eb;
+        }
+        .same-day-label .impossible {
+            color: #dc2626;
+        }
+        .day-groups {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .day-group {
+            flex: 1;
+            min-width: 260px;
+        }
+        .day-group-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+        }
+        .schedule-box {
+            background: #eee;
+            border-radius: 16px;
+            padding: 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .treatment-item {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a1a;
+            text-align: center;
+            padding: 8px 0;
+        }
+        .treatment-item.simultaneous {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid #aaa;
+            margin: 6px 0;
+        }
+        .note-text {
+            font-size: 13px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #856404;
+        }
+        .warning-box strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        .error-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #721c24;
+            text-align: center;
+        }
+        .interval-detail {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 16px;
+        }
+        .interval-detail table {
+            margin: 8px auto;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .interval-detail th, .interval-detail td {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+            text-align: center;
+        }
+        .interval-detail th {
+            background: #f0f0f0;
+        }
+        .detail-toggle {
+            background: none;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            margin-top: 16px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .detail-toggle:hover {
+            background: #f0f0f0;
+        }
+        .hidden { display: none; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 22px; }
+            .day-groups { flex-direction: column; }
+            .day-group { min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>施術順チェック表</h1>
+    <div id="selectors" class="selector-container"></div>
+    <div class="btn-row">
+        <button class="add-btn" onclick="addSelector()" title="施術を追加">+</button>
+        <button class="check-btn" onclick="checkSchedule()">チェック</button>
+        <button class="reset-btn" onclick="resetAll()">リセット</button>
+    </div>
+    <div id="results" class="result-section"></div>
+</div>
+
+<script>
+// ===== TREATMENT DATA =====
+const TREATMENTS = [
+    'ボトックス',
+    'ヒアルロン酸',
+    'スキンブースター・水光注射',
+    '脂肪溶解注射',
+    'ケロイド・炎症注射',
+    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）',
+    'ポテンツァ（アクネショット）',
+    'ポテンツァ（肝斑）',
+    'キュアジェット',
+    'HIFU',
+    'HIFUリニア',
+    'ザーフ',
+    'デンシティー',
+    'オンダリフト',
+    'インモードVリフト（FX+Forma）',
+    'Fx',
+    'Forma',
+    'アクアピール'
+];
+
+// Short display names for compact UI
+const SHORT_NAMES = {
+    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 'ポテンツァ（ドラデリ）',
+    'インモードVリフト（FX+Forma）': 'インモードVリフト'
+};
+
+// Treatment ordering priority (lower = do first within same day)
+const PRIORITY = {
+    'HIFU': 10, 'HIFUリニア': 11,
+    'ザーフ': 20, 'デンシティー': 21,
+    'オンダリフト': 30, 'インモードVリフト（FX+Forma）': 31, 'Fx': 32, 'Forma': 33,
+    'キュアジェット': 40,
+    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 50,
+    'ポテンツァ（アクネショット）': 51,
+    'ポテンツァ（肝斑）': 52,
+    'スキンブースター・水光注射': 60,
+    '脂肪溶解注射': 70, 'ケロイド・炎症注射': 71,
+    'ボトックス': 80, 'ヒアルロン酸': 80,
+    'アクアピール': 90
+};
+
+// Interval matrix: INTERVALS[next_treatment_index][first_treatment_index]
+// Values: "0"=同日可, "0B"=同日可(部位による), "1W","2W","1M","3M", "-"=データなし
+// Row=Before(next), Col=After(first)
+const INTERVALS = [
+    // Row 0: ボトックス (after each treatment, when can you do ボトックス?)
+    //        ボト  ヒア   スキン  脂肪  ケロ  ポドラ  ポアク  ポ肝   キュア HIFU  HIFUリ ザーフ デンシ オンダ インモ Fx    Forma アクア
+    /* 0*/  ["3M", "0",  "0",   "0",  "0",  "0B",  "0B",  "0B",  "0B", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1W"],
+    /* 1*/  ["0B", "0",  "0",   "0B", "0B", "0B",  "0B",  "0B",  "0B", "0B", "0",  "0",  "0B", "0B", "0B", "-",  "-",  "0B"],
+    /* 2*/  ["0",  "0",  "1M",  "0B", "0",  "1M",  "0B",  "1M",  "1M", "1W", "1M", "1W", "1W", "1W", "1W", "-",  "-",  "1W"],
+    /* 3*/  ["0",  "1M", "0B",  "1M", "0",  "1M",  "1M",  "1M",  "0B", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "0B"],
+    /* 4*/  ["0",  "0",  "0B",  "0",  "2W", "0B",  "0B",  "0B",  "0B", "0",  "0",  "0B", "0B", "0B", "0B", "-",  "-",  "0B"],
+    /* 5*/  ["0",  "0",  "0",   "0",  "0",  "1M",  "0",   "0",   "1M", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1M"],
+    /* 6*/  ["0",  "0",  "0",   "0",  "0",  "0B",  "1M",  "0B",  "0B", "0",  "0",  "0B", "0B", "0B", "0B", "-",  "-",  "0B"],
+    /* 7*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "1M",  "0",  "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "1M"],
+    /* 8*/  ["0",  "0",  "1W",  "0",  "0",  "1M",  "0",   "1M",  "1M", "1M", "1M", "1M", "1M", "1M", "1M", "-",  "-",  "2W"],
+    /* 9*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "3M", "0",  "0",  "0",  "0",  "0",  "0",  "0",  "0"],
+    /*10*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "1M", "0",  "0",  "0",  "0",  "0",  "0",  "0"],
+    /*11*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0B",  "0",  "0",  "1M", "3M", "3M", "0",  "0",  "0",  "0",  "0"],
+    /*12*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "1M", "3M", "3M", "0",  "0",  "0",  "-",  "0"],
+    /*13*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "2W", "2W", "2W", "2W", "4W", "0",  "2W", "2W", "0"],
+    /*14*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "2W", "2W", "-"],
+    /*15*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "2W", "0",  "-"],
+    /*16*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "0",  "2W", "0",  "1W", "0"],
+    /*17*/  ["0",  "0",  "0",   "0",  "0",  "0",   "0",   "0",   "0",  "0",  "0",  "0",  "0",  "-",  "-",  "-",  "-",  "2W"]
+];
+
+// ===== INTERVAL PARSING =====
+function parseDays(val) {
+    if (!val || val === '-') return -1; // no data
+    if (val === '0' || val === '0B') return 0;
+    if (val === '1W') return 7;
+    if (val === '2W') return 14;
+    if (val === '4W') return 28;
+    if (val === '1M') return 30;
+    if (val === '3M') return 90;
+    return -1;
+}
+
+function intervalLabel(val) {
+    if (!val || val === '-') return 'データなし';
+    if (val === '0') return '同日可';
+    if (val === '0B') return '同日可（部位による）';
+    if (val === '1W') return '1週間後';
+    if (val === '2W') return '2週間後';
+    if (val === '4W') return '4週間後';
+    if (val === '1M') return '1ヶ月後';
+    if (val === '3M') return '3ヶ月後';
+    return val;
+}
+
+function dayLabel(days) {
+    if (days === 0) return '同日';
+    if (days === 7) return '1週間後';
+    if (days === 14) return '2週間後';
+    if (days === 28) return '4週間後';
+    if (days === 30) return '1ヶ月後';
+    if (days === 90) return '3ヶ月後';
+    return days + '日後';
+}
+
+function getInterval(firstIdx, nextIdx) {
+    return INTERVALS[nextIdx][firstIdx];
+}
+
+function isSameDay(firstIdx, nextIdx) {
+    const val = getInterval(firstIdx, nextIdx);
+    return val === '0' || val === '0B';
+}
+
+// Find a valid same-day ordering for a group using topological sort
+// Returns ordered array if possible, null if not
+function findSameDayOrdering(indices) {
+    if (indices.length <= 1) return indices.length === 1 ? [...indices] : [];
+
+    // For each pair, check directional same-day compatibility
+    const n = indices.length;
+    const adj = {};
+    const inDegree = {};
+    indices.forEach(i => { adj[i] = []; inDegree[i] = 0; });
+
+    for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+            const a = indices[i], b = indices[j];
+            const abOk = isSameDay(a, b); // a first, then b OK same day
+            const baOk = isSameDay(b, a); // b first, then a OK same day
+
+            if (!abOk && !baOk) return null; // can't be same day in any order
+
+            if (abOk && !baOk) {
+                // a must come before b
+                adj[a].push(b);
+                inDegree[b]++;
+            } else if (!abOk && baOk) {
+                // b must come before a
+                adj[b].push(a);
+                inDegree[a]++;
+            }
+            // If both OK, no ordering constraint
+        }
+    }
+
+    // Kahn's topological sort (priority-based for deterministic ordering)
+    const queue = indices.filter(i => inDegree[i] === 0);
+    const result = [];
+
+    while (queue.length > 0) {
+        queue.sort((a, b) => (PRIORITY[TREATMENTS[a]] || 99) - (PRIORITY[TREATMENTS[b]] || 99));
+        const node = queue.shift();
+        result.push(node);
+        for (const next of adj[node]) {
+            inDegree[next]--;
+            if (inDegree[next] === 0) queue.push(next);
+        }
+    }
+
+    if (result.length !== indices.length) return null; // cycle = can't do same day
+    return result;
+}
+
+// Check if a group can be done same day (has valid ordering)
+function canAllSameDay(indices) {
+    if (indices.length <= 1) return true;
+    return findSameDayOrdering(indices) !== null;
+}
+
+// ===== SCHEDULING ALGORITHM =====
+function findBestSchedule(selectedIndices) {
+    const n = selectedIndices.length;
+
+    // Check if all can be same day
+    const ordering = findSameDayOrdering(selectedIndices);
+    if (ordering) {
+        return {
+            sameDayPossible: true,
+            groups: [{ day: 0, label: '本日', treatments: orderToGroups(ordering) }]
+        };
+    }
+
+    // Not all same day - find optimal grouping
+    let bestSchedule = null;
+    let bestScore = Infinity; // lower = better
+
+    const subsets = getAllSubsets(selectedIndices);
+
+    for (const firstGroup of subsets) {
+        if (firstGroup.length === 0) continue;
+        if (!canAllSameDay(firstGroup)) continue;
+
+        const remaining = selectedIndices.filter(i => !firstGroup.includes(i));
+        if (remaining.length === 0) continue;
+
+        // Calculate wait: for each remaining treatment, the max interval FROM first group
+        const waitMap = {};
+        for (const rIdx of remaining) {
+            let maxWait = 0;
+            for (const fIdx of firstGroup) {
+                const days = parseDays(getInterval(fIdx, rIdx));
+                if (days > 0) maxWait = Math.max(maxWait, days);
+            }
+            waitMap[rIdx] = maxWait;
+        }
+
+        // Group remaining by wait time
+        const dayGroups = {};
+        for (const rIdx of remaining) {
+            const d = waitMap[rIdx];
+            if (!dayGroups[d]) dayGroups[d] = [];
+            dayGroups[d].push(rIdx);
+        }
+
+        // Check each later group has valid same-day ordering
+        let valid = true;
+        for (const dayKey in dayGroups) {
+            if (!canAllSameDay(dayGroups[dayKey])) {
+                valid = false;
+                break;
+            }
+        }
+        if (!valid) continue;
+
+        // Score: minimize max wait, then maximize first-day group size
+        const maxDay = Math.max(...Object.keys(dayGroups).map(Number));
+        const numGroups = Object.keys(dayGroups).length;
+        const score = maxDay * 10000 + numGroups * 100 - firstGroup.length;
+
+        if (score < bestScore) {
+            bestScore = score;
+            const firstOrdering = findSameDayOrdering(firstGroup);
+            const groups = [{ day: 0, label: '本日', treatments: orderToGroups(firstOrdering) }];
+
+            const sortedDays = Object.keys(dayGroups).map(Number).sort((a, b) => a - b);
+            for (const d of sortedDays) {
+                const laterOrdering = findSameDayOrdering(dayGroups[d]);
+                groups.push({
+                    day: d,
+                    label: '本日より' + dayLabel(d),
+                    treatments: orderToGroups(laterOrdering || dayGroups[d])
+                });
+            }
+            bestSchedule = { sameDayPossible: false, groups };
+        }
+    }
+
+    if (!bestSchedule) {
+        // Fallback: each treatment individually
+        const groups = selectedIndices.map((idx, i) => ({
+            day: i * 30,
+            label: i === 0 ? '本日' : dayLabel(i * 30),
+            treatments: [{ indices: [idx] }]
+        }));
+        bestSchedule = { sameDayPossible: false, groups };
+    }
+
+    return bestSchedule;
+}
+
+// Convert an ordered list of treatment indices into grouped display format
+function orderToGroups(orderedIndices) {
+    if (!orderedIndices || orderedIndices.length === 0) return [];
+    const groups = [];
+    let currentGroup = [orderedIndices[0]];
+
+    for (let i = 1; i < orderedIndices.length; i++) {
+        const prev = orderedIndices[i - 1];
+        const curr = orderedIndices[i];
+        // Group together if same priority (can be done simultaneously)
+        if ((PRIORITY[TREATMENTS[curr]] || 99) === (PRIORITY[TREATMENTS[prev]] || 99)) {
+            currentGroup.push(curr);
+        } else {
+            groups.push({ indices: currentGroup });
+            currentGroup = [curr];
+        }
+    }
+    groups.push({ indices: currentGroup });
+    return groups;
+}
+
+function getAllSubsets(arr) {
+    const result = [];
+    const n = arr.length;
+    for (let mask = 0; mask < (1 << n); mask++) {
+        const subset = [];
+        for (let i = 0; i < n; i++) {
+            if (mask & (1 << i)) subset.push(arr[i]);
+        }
+        result.push(subset);
+    }
+    return result;
+}
+
+
+// ===== UI =====
+let selectorCount = 0;
+
+function getDisplayName(name) {
+    return SHORT_NAMES[name] || name;
+}
+
+function addSelector() {
+    selectorCount++;
+    const container = document.getElementById('selectors');
+    const row = document.createElement('div');
+    row.className = 'selector-row';
+    row.id = 'selector-row-' + selectorCount;
+
+    const select = document.createElement('select');
+    select.id = 'select-' + selectorCount;
+
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = '施術を選択してください';
+    select.appendChild(defaultOpt);
+
+    TREATMENTS.forEach((t, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = t;
+        select.appendChild(opt);
+    });
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = '×';
+    removeBtn.onclick = () => {
+        row.remove();
+        // Clear results when selectors change
+        document.getElementById('results').innerHTML = '';
+    };
+
+    row.appendChild(select);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+}
+
+function checkSchedule() {
+    const selects = document.querySelectorAll('.selector-row select');
+    const selectedIndices = [];
+    const seen = new Set();
+    let hasDuplicate = false;
+
+    selects.forEach(sel => {
+        if (sel.value !== '') {
+            const idx = parseInt(sel.value);
+            if (seen.has(idx)) {
+                hasDuplicate = true;
+            } else {
+                seen.add(idx);
+                selectedIndices.push(idx);
+            }
+        }
+    });
+
+    const resultsDiv = document.getElementById('results');
+
+    if (selectedIndices.length < 2) {
+        resultsDiv.innerHTML = '<div class="error-box">2つ以上の施術を選択してください</div>';
+        return;
+    }
+
+    if (hasDuplicate) {
+        resultsDiv.innerHTML = '<div class="error-box">同じ施術が重複しています</div>';
+        return;
+    }
+
+    // Check for unknown intervals
+    let unknownPairs = [];
+    for (let i = 0; i < selectedIndices.length; i++) {
+        for (let j = i + 1; j < selectedIndices.length; j++) {
+            const a = selectedIndices[i], b = selectedIndices[j];
+            const ab = getInterval(a, b);
+            const ba = getInterval(b, a);
+            if (ab === '-' || ba === '-') {
+                unknownPairs.push([TREATMENTS[a], TREATMENTS[b]]);
+            }
+        }
+    }
+
+    const schedule = findBestSchedule(selectedIndices);
+    renderResults(schedule, unknownPairs);
+}
+
+function renderResults(schedule, unknownPairs) {
+    const resultsDiv = document.getElementById('results');
+    let html = '';
+
+    // Same-day status
+    html += '<div class="same-day-label">同日施術：';
+    if (schedule.sameDayPossible) {
+        html += '<span class="status possible">可能</span>';
+    } else {
+        html += '<span class="status impossible">不可</span>';
+    }
+    html += '</div>';
+
+    // Day groups
+    if (schedule.groups.length === 1) {
+        // Single day - no day label needed
+        html += renderScheduleBox(schedule.groups[0].treatments);
+    } else {
+        html += '<div class="day-groups">';
+        for (const group of schedule.groups) {
+            html += '<div class="day-group">';
+            html += '<div class="day-group-title">' + group.label + '</div>';
+            html += renderScheduleBox(group.treatments);
+            html += '</div>';
+        }
+        html += '</div>';
+    }
+
+    // Warnings for unknown intervals
+    if (unknownPairs.length > 0) {
+        html += '<div class="warning-box"><strong>⚠ 注意</strong>';
+        html += '以下の組み合わせは間隔データがありません：<br>';
+        unknownPairs.forEach(pair => {
+            html += '・' + getDisplayName(pair[0]) + ' × ' + getDisplayName(pair[1]) + '<br>';
+        });
+        html += '</div>';
+    }
+
+    // Detail toggle button
+    html += '<button class="detail-toggle" onclick="toggleDetail()">詳細を表示</button>';
+    html += '<div id="detail-section" class="interval-detail hidden"></div>';
+
+    resultsDiv.innerHTML = html;
+
+    // Populate detail section
+    renderDetailTable();
+}
+
+function renderScheduleBox(treatmentGroups) {
+    let html = '<div class="schedule-box">';
+    treatmentGroups.forEach((group, gIdx) => {
+        if (gIdx > 0) {
+            html += '<div class="arrow-down"></div>';
+        }
+        if (group.indices.length === 1) {
+            html += '<div class="treatment-item">' + getDisplayName(TREATMENTS[group.indices[0]]) + '</div>';
+        } else {
+            html += '<div class="treatment-item simultaneous">';
+            group.indices.forEach((idx, i) => {
+                if (i > 0) html += '<span style="color:#999;margin:0 4px">·</span>';
+                html += '<span>' + getDisplayName(TREATMENTS[idx]) + '</span>';
+            });
+            html += '</div>';
+        }
+    });
+    html += '</div>';
+    return html;
+}
+
+function toggleDetail() {
+    const section = document.getElementById('detail-section');
+    const btn = document.querySelector('.detail-toggle');
+    if (section.classList.contains('hidden')) {
+        section.classList.remove('hidden');
+        btn.textContent = '詳細を非表示';
+    } else {
+        section.classList.add('hidden');
+        btn.textContent = '詳細を表示';
+    }
+}
+
+function renderDetailTable() {
+    const selects = document.querySelectorAll('.selector-row select');
+    const selectedIndices = [];
+    selects.forEach(sel => {
+        if (sel.value !== '') {
+            const idx = parseInt(sel.value);
+            if (!selectedIndices.includes(idx)) selectedIndices.push(idx);
+        }
+    });
+
+    if (selectedIndices.length < 2) return;
+
+    const section = document.getElementById('detail-section');
+    let html = '<p style="margin-bottom:8px">選択した施術間の間隔一覧：</p>';
+    html += '<table><tr><th>先の施術 → 後の施術</th><th>必要間隔</th></tr>';
+
+    for (let i = 0; i < selectedIndices.length; i++) {
+        for (let j = 0; j < selectedIndices.length; j++) {
+            if (i === j) continue;
+            const first = selectedIndices[i];
+            const next = selectedIndices[j];
+            const val = getInterval(first, next);
+            html += '<tr><td>' + getDisplayName(TREATMENTS[first]) + ' → ' + getDisplayName(TREATMENTS[next]) + '</td>';
+            html += '<td>' + intervalLabel(val) + '</td></tr>';
+        }
+    }
+    html += '</table>';
+    section.innerHTML = html;
+}
+
+function resetAll() {
+    document.getElementById('selectors').innerHTML = '';
+    document.getElementById('results').innerHTML = '';
+    selectorCount = 0;
+    for (let i = 0; i < 5; i++) addSelector();
+}
+
+// Initialize with 5 selectors
+for (let i = 0; i < 5; i++) addSelector();
+</script>
+</body>
+</html>

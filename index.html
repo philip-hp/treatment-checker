@@ -4,1112 +4,1262 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>施術順チェック表</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', Meiryo, sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 30px 16px;
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #eeeeee;
+            padding: 20px;
         }
-        #app {
-            width: 100%;
-            max-width: 640px;
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 30px;
-            color: #1a1a1a;
+
+        .header {
             position: relative;
+            margin-bottom: 30px;
+            text-align: center;
         }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
         .settings-btn {
             position: absolute;
+            top: 0;
             right: 0;
-            top: 50%;
-            transform: translateY(-50%);
             background: none;
             border: none;
-            font-size: 22px;
+            font-size: 24px;
             cursor: pointer;
-            color: #999;
-            padding: 4px 8px;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .settings-btn:hover { color: #555; background: #e8e8e8; }
-
-        /* Settings panel */
-        .settings-panel {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .settings-panel label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 6px;
-        }
-        .settings-panel input[type="text"] {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 13px;
-            outline: none;
-            margin-bottom: 12px;
-        }
-        .settings-panel input[type="text"]:focus { border-color: #4a90d9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
-        .settings-btns {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .settings-btns button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .settings-btns button:first-child { background: #4a90d9; color: white; }
-        .settings-btns button:first-child:hover { background: #3a7bc8; }
-        .settings-btns button:last-child { background: #eee; color: #666; }
-        .settings-btns button:last-child:hover { background: #ddd; }
-        .data-status {
-            font-size: 12px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            line-height: 1.5;
-        }
-        .data-status.success { background: #d4edda; color: #155724; }
-        .data-status.error { background: #f8d7da; color: #721c24; }
-        .data-status.loading { background: #cce5ff; color: #004085; }
-        .data-status.info { background: #fff3cd; color: #856404; }
-        .settings-note {
-            font-size: 11px;
-            color: #999;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
-
-        /* Loading overlay */
-        .loading-box {
-            text-align: center;
-            padding: 40px;
-            color: #888;
-            font-size: 15px;
-        }
-        .loading-box .spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid #ddd;
-            border-top: 3px solid #4a90d9;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 12px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .selector-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .selector-row {
+            color: #666;
+            padding: 0;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
-        .selector-row select {
-            flex: 1;
-            padding: 14px 40px 14px 20px;
-            font-size: 15px;
-            border: none;
-            border-radius: 25px;
-            background: #e8e8e8;
+
+        .settings-btn:hover {
             color: #333;
-            appearance: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23333' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
-            outline: none;
         }
-        .selector-row select:focus { box-shadow: 0 0 0 2px #4a90d9; }
-        .selector-row select option[value=""] { color: #999; }
+
+        .data-source {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .selections-container {
+            margin-bottom: 30px;
+        }
+
+        .selection-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .treatment-select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            background-color: #f5f5f5;
+            font-size: 14px;
+            font-family: 'Noto Sans JP', sans-serif;
+            color: #333;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .treatment-select:hover {
+            background-color: #eeeeee;
+        }
+
+        .treatment-select option {
+            background-color: white;
+            color: #333;
+        }
+
         .remove-btn {
             width: 32px;
             height: 32px;
+            border: 1px solid #ddd;
             border-radius: 50%;
-            border: none;
-            background: #ddd;
-            color: #888;
-            font-size: 18px;
+            background: white;
+            color: #999;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
             transition: all 0.2s;
         }
-        .remove-btn:hover { background: #ff6b6b; color: white; }
-        .btn-row {
+
+        .remove-btn:hover {
+            background-color: #f5f5f5;
+            color: #666;
+            border-color: #bbb;
+        }
+
+        .button-group {
             display: flex;
-            justify-content: center;
-            gap: 16px;
+            gap: 10px;
             margin-bottom: 30px;
         }
+
         .add-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: none;
-            background: #ddd;
-            color: #666;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        .add-btn:hover { background: #ccc; }
-        .check-btn {
-            padding: 12px 40px;
-            border: none;
-            border-radius: 25px;
-            background: #4a90d9;
-            color: white;
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            color: #666;
         }
-        .check-btn:hover { background: #3a7bc8; }
-        .check-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        .add-btn:hover {
+            background-color: #f5f5f5;
+            border-color: #999;
+        }
+
+        .check-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        .check-btn:hover {
+            background-color: #357abd;
+        }
+
         .reset-btn {
-            padding: 12px 24px;
-            border: 1px solid #ccc;
-            border-radius: 25px;
+            flex: 1;
+            padding: 12px;
             background: white;
             color: #666;
-            font-size: 15px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: 'Noto Sans JP', sans-serif;
         }
-        .reset-btn:hover { background: #f0f0f0; border-color: #aaa; }
 
-        /* Results */
-        .result-section { margin-top: 20px; }
-        .same-day-label {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 24px;
+        .reset-btn:hover {
+            border-color: #999;
+            color: #333;
         }
-        .same-day-label .status { font-weight: 800; }
-        .same-day-label .possible { color: #2563eb; }
-        .same-day-label .impossible { color: #dc2626; }
-        .day-groups { display: flex; gap: 20px; flex-wrap: wrap; }
-        .day-group { flex: 1; min-width: 260px; }
-        .day-group-title {
-            text-align: center;
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .status-message {
             font-size: 16px;
-            font-weight: 600;
-            color: #555;
-            margin-bottom: 12px;
-        }
-        .schedule-box {
-            background: #eee;
-            border-radius: 16px;
-            padding: 28px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0;
-        }
-        .treatment-item {
-            font-size: 17px;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-weight: bold;
+            margin-bottom: 20px;
             text-align: center;
-            padding: 8px 0;
         }
-        .treatment-item.simultaneous {
+
+        .status-ok {
+            color: #4a90d9;
+        }
+
+        .status-ng {
+            color: #d9534f;
+        }
+
+        .schedule-box {
+            background-color: #f0f0f0;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .schedule-content {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
         }
-        .arrow-down {
-            width: 0; height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 12px solid #aaa;
-            margin: 6px 0;
-        }
-        .warning-box {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            font-size: 14px;
-            color: #856404;
-        }
-        .warning-box strong { display: block; margin-bottom: 4px; }
-        .error-box {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            font-size: 14px;
-            color: #721c24;
+
+        .day-group {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
             text-align: center;
         }
-        .interval-detail {
+
+        .day-label {
             font-size: 12px;
             color: #999;
-            text-align: center;
-            margin-top: 16px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
         }
-        .interval-detail table {
-            margin: 8px auto;
+
+        .treatment-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .treatment-item {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+            padding: 8px 0;
+            word-break: break-word;
+        }
+
+        .treatment-item.group {
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin: 4px 0;
+        }
+
+        .arrow {
+            color: #ccc;
+            font-size: 16px;
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .toggle-details-btn {
+            background: none;
+            border: none;
+            color: #4a90d9;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .toggle-details-btn:hover {
+            color: #357abd;
+        }
+
+        .details-table {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
             border-collapse: collapse;
             font-size: 12px;
         }
-        .interval-detail th, .interval-detail td {
+
+        .details-table.show {
+            display: table;
+        }
+
+        .details-table th,
+        .details-table td {
             border: 1px solid #ddd;
-            padding: 4px 8px;
+            padding: 8px;
             text-align: center;
         }
-        .interval-detail th { background: #f0f0f0; }
-        .detail-toggle {
-            background: none;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 13px;
-            color: #666;
-            cursor: pointer;
-            margin-top: 16px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .detail-toggle:hover { background: #f0f0f0; }
-        .hidden { display: none; }
 
-        @media (max-width: 600px) {
-            h1 { font-size: 22px; }
-            .day-groups { flex-direction: column; }
-            .day-group { min-width: unset; }
+        .details-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .details-table td {
+            background-color: white;
+        }
+
+        .warning-box {
+            background-color: #fffacd;
+            border: 2px solid #ffa500;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .warning-box strong {
+            color: #d9534f;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4a90d9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.1);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Noto Sans JP', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-primary {
+            background-color: #4a90d9;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background-color: #357abd;
+        }
+
+        .modal-btn-secondary {
+            background: white;
+            color: #666;
+            border: 2px solid #ccc;
+        }
+
+        .modal-btn-secondary:hover {
+            border-color: #999;
+            color: #333;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 15px;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
-<div id="app">
-    <h1>施術順チェック表 <button class="settings-btn" onclick="toggleSettings()">&#9881;</button></h1>
-
-    <div id="settings-panel" class="settings-panel hidden">
-        <label>Google スプレッドシート URL:</label>
-        <input type="text" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/.../edit?gid=..." />
-        <div class="settings-btns">
-            <button onclick="saveAndReload()">保存・再読込</button>
-            <button onclick="resetURL()">デフォルトに戻す</button>
+    <div class="container">
+        <div class="header">
+            <button class="settings-btn" onclick="openSettings()">⚙</button>
+            <div class="title">施術順チェック表</div>
+            <div class="data-source" id="dataSource">Loading...</div>
         </div>
-        <div id="data-status"></div>
-        <div class="settings-note">
-            ※ スプレッドシートの共有設定を「リンクを知っている全員が閲覧可」にしてください。<br>
-            ※ 「施術間隔表(Dr確認済)」タブのURLを貼り付けてください。
+
+        <div class="selections-container" id="selectionsContainer">
         </div>
-    </div>
 
-    <div id="loading" class="loading-box">
-        <div class="spinner"></div><br>
-        データを読み込み中...
-    </div>
-
-    <div id="main-content" class="hidden">
-        <div id="selectors" class="selector-container"></div>
-        <div class="btn-row">
-            <button class="add-btn" onclick="addSelector()" title="施術を追加">+</button>
+        <div class="button-group">
+            <button class="add-btn" onclick="addSelection()">+ 追加</button>
             <button class="check-btn" onclick="checkSchedule()">チェック</button>
             <button class="reset-btn" onclick="resetAll()">リセット</button>
         </div>
-        <div id="results" class="result-section"></div>
+
+        <div class="results" id="results">
+        </div>
     </div>
-</div>
 
-<script>
-// ===== DEFAULT CONFIG =====
-const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1EsVWeEsdzc5rpU6wTiT6zjCH_0BKGjQ-eZfBW_HevsU/edit?gid=265612214#gid=265612214';
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-title">設定</div>
+            <div class="form-group">
+                <label for="sheetUrlInput">Google Sheets リンク:</label>
+                <input type="text" id="sheetUrlInput" placeholder="https://docs.google.com/spreadsheets/d/...">
+            </div>
+            <div class="hint-text">
+                Google SheetsのURLをそのまま貼り付けてください。<br>
+                ※シートが「リンクを知っている全員」に共有されている必要があります。
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-primary" onclick="saveSettings()">保存</button>
+                <button class="modal-btn modal-btn-secondary" onclick="resetToDefault()">デフォルトに戻す</button>
+                <button class="modal-btn modal-btn-secondary" onclick="closeSettings()">キャンセル</button>
+            </div>
+        </div>
+    </div>
 
-// Treatment ordering priority (lower = do first within same day)
-// Treatments not in this map default to 99
-const PRIORITY = {
-    'HIFU': 10, 'HIFUリニア': 11,
-    'ザーフ': 20, 'デンシティー': 21,
-    'オンダリフト': 30, 'インモードVリフト（FX+Forma）': 31, 'Fx': 32, 'Forma': 33,
-    'キュアジェット': 40,
-    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 50,
-    'ポデンツァ（アクネショット）': 51,
-    'ポテンツァ（肝斑）': 52,
-    'スキンブースター・水光注射': 60,
-    '脂肪溶解注射': 70, 'ケロイド・炎症注射': 71,
-    'ボトックス': 80, 'ヒアルロン酸': 80,
-    'アクアピール': 90
-};
+    <script>
+        const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1EsVWeEsdzc5rpU6wTiT6zjCH_0BKGjQ-eZfBW_HevsU/edit?gid=265612214';
 
-// Short display names for compact UI
-const SHORT_NAMES = {
-    'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 'ポテンツァ（ドラデリ）',
-    'インモードVリフト（FX+Forma）': 'インモードVリフト'
-};
-
-// ===== MUTABLE DATA (populated from sheet or fallback) =====
-let TREATMENTS = [];
-let INTERVALS = [];
-let dataSource = ''; // 'sheet' or 'fallback'
-
-// ===== FALLBACK DATA =====
-const FALLBACK_TREATMENTS = [
-    'ボトックス','ヒアルロン酸','スキンブースター・水光注射','脂肪溶解注射',
-    'ケロイド・炎症注射','ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）',
-    'ポテンツァ（アクネショット）','ポテンツァ（肝斑）','キュアジェット',
-    'HIFU','HIFUリニア','ザーフ','デンシティー','オンダリフト',
-    'インモードVリフト（FX+Forma）','Fx','Forma','アクアピール'
-];
-const FALLBACK_INTERVALS = [
-    ["3M","0","0","0","0","0B","0B","0B","0B","1M","1M","1M","1M","1M","1M","-","-","1W"],
-    ["0B","0","0","0B","0B","0B","0B","0B","0B","0B","0","0","0B","0B","0B","-","-","0B"],
-    ["0","0","1M","0B","0","1M","0B","1M","1M","1W","1M","1W","1W","1W","1W","-","-","1W"],
-    ["0","1M","0B","1M","0","1M","1M","1M","0B","1M","1M","1M","1M","1M","1M","-","-","0B"],
-    ["0","0","0B","0","2W","0B","0B","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
-    ["0","0","0","0","0","1M","0","0","1M","1M","1M","1M","1M","1M","1M","-","-","1M"],
-    ["0","0","0","0","0","0B","1M","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
-    ["0","0","0","0","0","0","0","1M","0","1M","1M","1M","1M","1M","1M","-","-","1M"],
-    ["0","0","1W","0","0","1M","0","1M","1M","1M","1M","1M","1M","1M","1M","-","-","2W"],
-    ["0","0","0","0","0","0","0","0","0","3M","0","0","0","0","0","0","0","0"],
-    ["0","0","0","0","0","0","0","0","0","0","1M","0","0","0","0","0","0","0"],
-    ["0","0","0","0","0","0","0","0B","0","0","1M","3M","3M","0","0","0","0","0"],
-    ["0","0","0","0","0","0","0","0","0","0","1M","3M","3M","0","0","0","-","0"],
-    ["0","0","0","0","0","0","0","0","0","2W","2W","2W","2W","4W","0","2W","2W","0"],
-    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","2W","-"],
-    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","0","-"],
-    ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","0","1W","0"],
-    ["0","0","0","0","0","0","0","0","0","0","0","0","0","-","-","-","-","2W"]
-];
-
-// ===== GOOGLE SHEETS FETCHING =====
-function extractSheetInfo(url) {
-    // Extract spreadsheet ID
-    const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (!idMatch) return null;
-    const sheetId = idMatch[1];
-
-    // Extract gid
-    let gid = '0';
-    const gidMatch = url.match(/gid=(\d+)/);
-    if (gidMatch) gid = gidMatch[1];
-
-    return { sheetId, gid };
-}
-
-function buildCSVUrl(sheetId, gid) {
-    return 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=out:csv&gid=' + gid;
-}
-
-// Simple CSV parser that handles quoted fields with commas and newlines
-function parseCSVText(text) {
-    const rows = [];
-    let row = [];
-    let field = '';
-    let inQuotes = false;
-    let i = 0;
-
-    while (i < text.length) {
-        const ch = text[i];
-        if (inQuotes) {
-            if (ch === '"') {
-                if (i + 1 < text.length && text[i + 1] === '"') {
-                    field += '"';
-                    i += 2;
-                } else {
-                    inQuotes = false;
-                    i++;
-                }
-            } else {
-                field += ch;
-                i++;
-            }
-        } else {
-            if (ch === '"') {
-                inQuotes = true;
-                i++;
-            } else if (ch === ',') {
-                row.push(field);
-                field = '';
-                i++;
-            } else if (ch === '\n' || (ch === '\r' && i + 1 < text.length && text[i + 1] === '\n')) {
-                row.push(field);
-                field = '';
-                rows.push(row);
-                row = [];
-                i += (ch === '\r') ? 2 : 1;
-            } else if (ch === '\r') {
-                row.push(field);
-                field = '';
-                rows.push(row);
-                row = [];
-                i++;
-            } else {
-                field += ch;
-                i++;
-            }
-        }
-    }
-    // Last field/row
-    if (field || row.length > 0) {
-        row.push(field);
-        rows.push(row);
-    }
-    return rows;
-}
-
-// Normalize interval values from spreadsheet display text to code
-function normalizeInterval(val) {
-    if (!val) return '-';
-    val = val.trim().replace(/\n/g, '').replace(/\r/g, '');
-    if (val === '' || val === '-') return '-';
-    if (val === '同日可') return '0';
-    if (val.indexOf('同日可') !== -1 && val.indexOf('部位') !== -1) return '0B';
-    // Standard interval codes
-    if (/^[0-9]+[WMwm]$/.test(val)) return val.toUpperCase();
-    // Handle compound values like "1M・2W" - take the shorter interval
-    if (val.indexOf('・') !== -1 || val.indexOf('〜') !== -1) {
-        var sep = val.indexOf('・') !== -1 ? '・' : '〜';
-        var parts = val.split(sep);
-        var minDays = Infinity;
-        var minCode = '-';
-        for (var p = 0; p < parts.length; p++) {
-            var norm = normalizeInterval(parts[p].trim());
-            var days = parseDays(norm);
-            if (days >= 0 && days < minDays) {
-                minDays = days;
-                minCode = norm;
-            }
-        }
-        if (minCode !== '-') return minCode;
-    }
-    return '-'; // Unknown format
-}
-
-function parseSheetData(csvRows) {
-    // Find the header row (contains "After" or "Before" or treatment names)
-    var headerRowIdx = -1;
-    var dataStartCol = -1;
-    var nameCol = -1;
-
-    for (var r = 0; r < Math.min(csvRows.length, 5); r++) {
-        for (var c = 0; c < csvRows[r].length; c++) {
-            var cell = (csvRows[r][c] || '').trim();
-            if (cell.indexOf('After') !== -1 || cell.indexOf('Before') !== -1 ||
-                cell.indexOf('after') !== -1 || cell.indexOf('before') !== -1) {
-                headerRowIdx = r;
-                nameCol = c;
-                dataStartCol = c + 1;
-                break;
-            }
-        }
-        if (headerRowIdx >= 0) break;
-    }
-
-    if (headerRowIdx < 0) {
-        // Fallback: assume row 1 (index 1) is header, column B (index 1) has names
-        headerRowIdx = 1;
-        nameCol = 1;
-        dataStartCol = 2;
-    }
-
-    // Extract column treatment names from header row
-    var colTreatments = [];
-    for (var c = dataStartCol; c < csvRows[headerRowIdx].length; c++) {
-        var name = (csvRows[headerRowIdx][c] || '').trim().replace(/\n/g, '');
-        if (name) colTreatments.push({ col: c, name: name });
-    }
-
-    if (colTreatments.length === 0) return null;
-
-    // Extract row data
-    var treatments = [];
-    var intervals = [];
-    for (var r = headerRowIdx + 1; r < csvRows.length; r++) {
-        var rowName = (csvRows[r][nameCol] || '').trim().replace(/\n/g, '');
-        if (!rowName) continue;
-        // Skip if it looks like a note or empty row
-        if (rowName.indexOf('※') === 0) continue;
-
-        treatments.push(rowName);
-        var rowIntervals = [];
-        for (var ci = 0; ci < colTreatments.length; ci++) {
-            var cellVal = (csvRows[r][colTreatments[ci].col] || '').trim();
-            rowIntervals.push(normalizeInterval(cellVal));
-        }
-        intervals.push(rowIntervals);
-    }
-
-    if (treatments.length === 0) return null;
-
-    return {
-        treatments: treatments,
-        colTreatments: colTreatments.map(function(ct) { return ct.name; }),
-        intervals: intervals
-    };
-}
-
-async function loadFromSheet() {
-    var url = getSavedURL();
-    var info = extractSheetInfo(url);
-    if (!info) {
-        showStatus('URLの形式が正しくありません', 'error');
-        useFallback();
-        return;
-    }
-
-    showStatus('スプレッドシートからデータを読み込み中...', 'loading');
-
-    try {
-        var csvUrl = buildCSVUrl(info.sheetId, info.gid);
-        var response = await fetch(csvUrl);
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        var text = await response.text();
-        var rows = parseCSVText(text);
-        var data = parseSheetData(rows);
-
-        if (!data || data.treatments.length < 2) {
-            throw new Error('データの解析に失敗しました');
+        function parseSheetUrl(url) {
+            // Extract Sheet ID and GID from a Google Sheets URL
+            var match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+            var sheetId = match ? match[1] : null;
+            var gidMatch = url.match(/[?&#]gid=(\d+)/);
+            var gid = gidMatch ? gidMatch[1] : '0';
+            return { sheetId: sheetId, gid: gid };
         }
 
-        TREATMENTS = data.treatments;
-        INTERVALS = data.intervals;
-        dataSource = 'sheet';
-        showStatus('スプレッドシートから ' + TREATMENTS.length + ' 件の施術データを読み込みました', 'success');
-    } catch (e) {
-        console.error('Sheet load error:', e);
-        var msg = 'スプレッドシートの読み込みに失敗しました。';
-        if (e.message.indexOf('Failed to fetch') !== -1 || e.message.indexOf('NetworkError') !== -1) {
-            msg += '共有設定を「リンクを知っている全員が閲覧可」にしてください。';
-        } else {
-            msg += '(' + e.message + ')';
-        }
-        msg += ' 内蔵データを使用します。';
-        showStatus(msg, 'error');
-        useFallback();
-    }
-}
+        const FALLBACK_TREATMENTS = [
+            'ボトックス', 'ヒアルロン酸', 'スキンブースター・水光注射', '脂肪溶解注射',
+            'ケロイド・炎症注射', 'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）',
+            'ポテンツァ（アクネショット）', 'ポテンツァ（肝斑）', 'キュアジェット',
+            'HIFU', 'HIFUリニア', 'ザーフ', 'デンシティー', 'オンダリフト',
+            'インモードWリフト（FX+Forma）', 'Fx', 'Forma', 'アクアピール'
+        ];
 
-function useFallback() {
-    TREATMENTS = FALLBACK_TREATMENTS.slice();
-    INTERVALS = FALLBACK_INTERVALS.map(function(r) { return r.slice(); });
-    dataSource = 'fallback';
-}
+        const FALLBACK_INTERVALS = [
+            ["3M","0","0","0","0","0B","0B","0B","0B","1M","1M","1M","1M","1M","1M","-","-","1W"],
+            ["0B","0","0","0B","0B","0B","0B","0B","0B","0B","0","0","0B","0B","0B","-","-","0B"],
+            ["0","0","1M","0B","0","1M","0B","1M","1M","1W","1M","1W","1W","1W","1W","-","-","1W"],
+            ["0","1M","0B","1M","0","1M","1M","1M","0B","1M","1M","1M","1M","1M","1M","-","-","0B"],
+            ["0","0","0B","0","2W","0B","0B","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
+            ["0","0","0","0","0","1M","0","0","1M","1M","1M","1M","1M","1M","1M","-","-","1M"],
+            ["0","0","0","0","0","0B","1M","0B","0B","0","0","0B","0B","0B","0B","-","-","0B"],
+            ["0","0","0","0","0","0","0","1M","0","1M","1M","1M","1M","1M","1M","-","-","1M"],
+            ["0","0","1W","0","0","1M","0","1M","1M","1M","1M","1M","1M","1M","1M","-","-","2W"],
+            ["0","0","0","0","0","0","0","0","0","3M","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0","1M","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0B","0","0","1M","3M","3M","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0","1M","3M","3M","0","0","0","-","0"],
+            ["0","0","0","0","0","0","0","0","0","2W","2W","2W","2W","4W","0","2W","2W","0"],
+            ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","2W","-"],
+            ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","2W","0","-"],
+            ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","2W","0","1W","0"],
+            ["0","0","0","0","0","0","0","0","0","0","0","0","0","-","-","-","-","2W"]
+        ];
 
-// ===== URL MANAGEMENT =====
-function getSavedURL() {
-    try {
-        var saved = localStorage.getItem('treatment_checker_sheet_url');
-        if (saved) return saved;
-    } catch (e) {}
-    return DEFAULT_SHEET_URL;
-}
-
-function saveURL(url) {
-    try { localStorage.setItem('treatment_checker_sheet_url', url); } catch (e) {}
-}
-
-function clearSavedURL() {
-    try { localStorage.removeItem('treatment_checker_sheet_url'); } catch (e) {}
-}
-
-// ===== SETTINGS UI =====
-function toggleSettings() {
-    var panel = document.getElementById('settings-panel');
-    panel.classList.toggle('hidden');
-    if (!panel.classList.contains('hidden')) {
-        document.getElementById('sheet-url').value = getSavedURL();
-    }
-}
-
-function saveAndReload() {
-    var url = document.getElementById('sheet-url').value.trim();
-    if (!url) {
-        showStatus('URLを入力してください', 'error');
-        return;
-    }
-    var info = extractSheetInfo(url);
-    if (!info) {
-        showStatus('Google スプレッドシートのURLを入力してください', 'error');
-        return;
-    }
-    saveURL(url);
-    reloadData();
-}
-
-function resetURL() {
-    clearSavedURL();
-    document.getElementById('sheet-url').value = DEFAULT_SHEET_URL;
-    reloadData();
-}
-
-async function reloadData() {
-    document.getElementById('main-content').classList.add('hidden');
-    document.getElementById('loading').classList.remove('hidden');
-    document.getElementById('results').innerHTML = '';
-    await loadFromSheet();
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('main-content').classList.remove('hidden');
-    rebuildSelectors();
-}
-
-function rebuildSelectors() {
-    document.getElementById('selectors').innerHTML = '';
-    document.getElementById('results').innerHTML = '';
-    selectorCount = 0;
-    for (var i = 0; i < 5; i++) addSelector();
-}
-
-function showStatus(msg, type) {
-    var el = document.getElementById('data-status');
-    el.textContent = msg;
-    el.className = 'data-status ' + type;
-}
-
-// ===== INTERVAL PARSING =====
-function parseDays(val) {
-    if (!val || val === '-') return -1;
-    if (val === '0' || val === '0B') return 0;
-    if (val === '1W') return 7;
-    if (val === '2W') return 14;
-    if (val === '4W') return 28;
-    if (val === '1M') return 30;
-    if (val === '3M') return 90;
-    return -1;
-}
-
-function intervalLabel(val) {
-    if (!val || val === '-') return 'データなし';
-    if (val === '0') return '同日可';
-    if (val === '0B') return '同日可（部位による）';
-    if (val === '1W') return '1週間後';
-    if (val === '2W') return '2週間後';
-    if (val === '4W') return '4週間後';
-    if (val === '1M') return '1ヶ月後';
-    if (val === '3M') return '3ヶ月後';
-    return val;
-}
-
-function dayLabel(days) {
-    if (days === 0) return '同日';
-    if (days === 7) return '1週間後';
-    if (days === 14) return '2週間後';
-    if (days === 28) return '4週間後';
-    if (days === 30) return '1ヶ月後';
-    if (days === 90) return '3ヶ月後';
-    return days + '日後';
-}
-
-function getInterval(firstIdx, nextIdx) {
-    if (nextIdx >= INTERVALS.length || firstIdx >= (INTERVALS[nextIdx] || []).length) return '-';
-    return INTERVALS[nextIdx][firstIdx];
-}
-
-function isSameDay(firstIdx, nextIdx) {
-    var val = getInterval(firstIdx, nextIdx);
-    return val === '0' || val === '0B';
-}
-
-// ===== SCHEDULING ALGORITHMS =====
-function findSameDayOrdering(indices) {
-    if (indices.length <= 1) return indices.length === 1 ? [indices[0]] : [];
-
-    var n = indices.length;
-    var adj = {};
-    var inDegree = {};
-    indices.forEach(function(i) { adj[i] = []; inDegree[i] = 0; });
-
-    for (var i = 0; i < n; i++) {
-        for (var j = i + 1; j < n; j++) {
-            var a = indices[i], b = indices[j];
-            var abOk = isSameDay(a, b);
-            var baOk = isSameDay(b, a);
-            if (!abOk && !baOk) return null;
-            if (abOk && !baOk) { adj[a].push(b); inDegree[b]++; }
-            else if (!abOk && baOk) { adj[b].push(a); inDegree[a]++; }
-        }
-    }
-
-    var queue = indices.filter(function(i) { return inDegree[i] === 0; });
-    var result = [];
-
-    while (queue.length > 0) {
-        queue.sort(function(a, b) { return (PRIORITY[TREATMENTS[a]] || 99) - (PRIORITY[TREATMENTS[b]] || 99); });
-        var node = queue.shift();
-        result.push(node);
-        for (var k = 0; k < adj[node].length; k++) {
-            var next = adj[node][k];
-            inDegree[next]--;
-            if (inDegree[next] === 0) queue.push(next);
-        }
-    }
-
-    if (result.length !== indices.length) return null;
-    return result;
-}
-
-function canAllSameDay(indices) {
-    if (indices.length <= 1) return true;
-    return findSameDayOrdering(indices) !== null;
-}
-
-function findBestSchedule(selectedIndices) {
-    var ordering = findSameDayOrdering(selectedIndices);
-    if (ordering) {
-        return {
-            sameDayPossible: true,
-            groups: [{ day: 0, label: '本日', treatments: orderToGroups(ordering) }]
+        const PRIORITY = {
+            'HIFU': 10, 'HIFUリニア': 11, 'ザーフ': 20, 'デンシティー': 21,
+            'オンダリフト': 30, 'インモードVリフト（FX+Forma）': 31, 'Fx': 32, 'Forma': 33,
+            'キュアジェット': 40,
+            'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 50,
+            'ポテンツァ（アクネショット）': 51, 'ポテンツァ（肝斑）': 52,
+            'スキンブースター・水光注射': 60, '脄肪溶解注射': 70, 'ケロイド・炎症注射': 71,
+            'ボトックス': 80, 'ヒアルロン酸': 80, 'アクアピール': 90
         };
-    }
 
-    var bestSchedule = null;
-    var bestScore = Infinity;
-    var subsets = getAllSubsets(selectedIndices);
+        const SHORT_NAMES = {
+            'ポテンツァ（ドラデリ：ジュベルック・水光(非架橋HA)）': 'ポテンツァ（ドラデリ）',
+            'インモードVリフト（FX+Forma）': 'インモードVリフト'
+        };
 
-    for (var si = 0; si < subsets.length; si++) {
-        var firstGroup = subsets[si];
-        if (firstGroup.length === 0) continue;
-        if (!canAllSameDay(firstGroup)) continue;
+        let TREATMENTS = [...FALLBACK_TREATMENTS];
+        let INTERVALS = FALLBACK_INTERVALS.map(row => [...row]);
+        let dataFromSheet = false;
+        let currentSelections = [-1, -1, -1, -1, -1];
 
-        var remaining = selectedIndices.filter(function(i) { return firstGroup.indexOf(i) === -1; });
-        if (remaining.length === 0) continue;
-
-        var waitMap = {};
-        for (var ri = 0; ri < remaining.length; ri++) {
-            var rIdx = remaining[ri];
-            var maxWait = 0;
-            for (var fi = 0; fi < firstGroup.length; fi++) {
-                var days = parseDays(getInterval(firstGroup[fi], rIdx));
-                if (days > 0) maxWait = Math.max(maxWait, days);
-            }
-            waitMap[rIdx] = maxWait;
-        }
-
-        var dayGroups = {};
-        for (var ri = 0; ri < remaining.length; ri++) {
-            var d = waitMap[remaining[ri]];
-            if (!dayGroups[d]) dayGroups[d] = [];
-            dayGroups[d].push(remaining[ri]);
-        }
-
-        var valid = true;
-        for (var dayKey in dayGroups) {
-            if (!canAllSameDay(dayGroups[dayKey])) { valid = false; break; }
-        }
-        if (!valid) continue;
-
-        var maxDay = Math.max.apply(null, Object.keys(dayGroups).map(Number));
-        var numGroups = Object.keys(dayGroups).length;
-        var score = maxDay * 10000 + numGroups * 100 - firstGroup.length;
-
-        if (score < bestScore) {
-            bestScore = score;
-            var firstOrdering = findSameDayOrdering(firstGroup);
-            var groups = [{ day: 0, label: '本日', treatments: orderToGroups(firstOrdering) }];
-
-            var sortedDays = Object.keys(dayGroups).map(Number).sort(function(a, b) { return a - b; });
-            for (var di = 0; di < sortedDays.length; di++) {
-                var dd = sortedDays[di];
-                var laterOrdering = findSameDayOrdering(dayGroups[dd]);
-                groups.push({
-                    day: dd,
-                    label: '本日より' + dayLabel(dd),
-                    treatments: orderToGroups(laterOrdering || dayGroups[dd])
-                });
-            }
-            bestSchedule = { sameDayPossible: false, groups: groups };
-        }
-    }
-
-    if (!bestSchedule) {
-        var groups = selectedIndices.map(function(idx, i) {
-            return {
-                day: i * 30,
-                label: i === 0 ? '本日' : dayLabel(i * 30),
-                treatments: [{ indices: [idx] }]
-            };
+        window.addEventListener('DOMContentLoaded', function() {
+            loadStoredSettings();
+            renderSelections();
+            loadData();
         });
-        bestSchedule = { sameDayPossible: false, groups: groups };
-    }
 
-    return bestSchedule;
-}
-
-function orderToGroups(orderedIndices) {
-    if (!orderedIndices || orderedIndices.length === 0) return [];
-    var groups = [];
-    var currentGroup = [orderedIndices[0]];
-
-    for (var i = 1; i < orderedIndices.length; i++) {
-        var prev = orderedIndices[i - 1];
-        var curr = orderedIndices[i];
-        if ((PRIORITY[TREATMENTS[curr]] || 99) === (PRIORITY[TREATMENTS[prev]] || 99)) {
-            currentGroup.push(curr);
-        } else {
-            groups.push({ indices: currentGroup });
-            currentGroup = [curr];
-        }
-    }
-    groups.push({ indices: currentGroup });
-    return groups;
-}
-
-function getAllSubsets(arr) {
-    var result = [];
-    var n = arr.length;
-    for (var mask = 0; mask < (1 << n); mask++) {
-        var subset = [];
-        for (var i = 0; i < n; i++) {
-            if (mask & (1 << i)) subset.push(arr[i]);
-        }
-        result.push(subset);
-    }
-    return result;
-}
-
-// ===== UI =====
-var selectorCount = 0;
-
-function getDisplayName(name) {
-    return SHORT_NAMES[name] || name;
-}
-
-function addSelector() {
-    selectorCount++;
-    var container = document.getElementById('selectors');
-    var row = document.createElement('div');
-    row.className = 'selector-row';
-    row.id = 'selector-row-' + selectorCount;
-
-    var select = document.createElement('select');
-    select.id = 'select-' + selectorCount;
-
-    var defaultOpt = document.createElement('option');
-    defaultOpt.value = '';
-    defaultOpt.textContent = '施術を選択してください';
-    select.appendChild(defaultOpt);
-
-    TREATMENTS.forEach(function(t, i) {
-        var opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = t;
-        select.appendChild(opt);
-    });
-
-    var removeBtn = document.createElement('button');
-    removeBtn.className = 'remove-btn';
-    removeBtn.textContent = '\u00D7';
-    removeBtn.onclick = function() {
-        row.remove();
-        document.getElementById('results').innerHTML = '';
-    };
-
-    row.appendChild(select);
-    row.appendChild(removeBtn);
-    container.appendChild(row);
-}
-
-function checkSchedule() {
-    var selects = document.querySelectorAll('.selector-row select');
-    var selectedIndices = [];
-    var seen = {};
-    var hasDuplicate = false;
-
-    selects.forEach(function(sel) {
-        if (sel.value !== '') {
-            var idx = parseInt(sel.value);
-            if (seen[idx]) {
-                hasDuplicate = true;
+        function loadStoredSettings() {
+            const stored = localStorage.getItem('treatmentCheckerSettings');
+            if (stored) {
+                const settings = JSON.parse(stored);
+                document.getElementById('sheetUrlInput').value = settings.sheetUrl || DEFAULT_SHEET_URL;
             } else {
-                seen[idx] = true;
-                selectedIndices.push(idx);
+                document.getElementById('sheetUrlInput').value = DEFAULT_SHEET_URL;
             }
         }
-    });
 
-    var resultsDiv = document.getElementById('results');
+        function loadData() {
+            const stored = localStorage.getItem('treatmentCheckerSettings');
+            let sheetUrl = DEFAULT_SHEET_URL;
 
-    if (selectedIndices.length < 2) {
-        resultsDiv.innerHTML = '<div class="error-box">2つ以上の施術を選択してください</div>';
-        return;
-    }
-    if (hasDuplicate) {
-        resultsDiv.innerHTML = '<div class="error-box">同じ施術が重複しています</div>';
-        return;
-    }
-
-    var unknownPairs = [];
-    for (var i = 0; i < selectedIndices.length; i++) {
-        for (var j = i + 1; j < selectedIndices.length; j++) {
-            var a = selectedIndices[i], b = selectedIndices[j];
-            var ab = getInterval(a, b);
-            var ba = getInterval(b, a);
-            if (ab === '-' || ba === '-') {
-                unknownPairs.push([TREATMENTS[a], TREATMENTS[b]]);
+            if (stored) {
+                const settings = JSON.parse(stored);
+                sheetUrl = settings.sheetUrl || DEFAULT_SHEET_URL;
             }
+
+            const parsed = parseSheetUrl(sheetUrl);
+            if (!parsed.sheetId) {
+                console.error('[施術チェック] Invalid sheet URL:', sheetUrl);
+                useFallback();
+                return;
+            }
+            loadViaJSONP(parsed.sheetId, parsed.gid);
         }
-    }
 
-    var schedule = findBestSchedule(selectedIndices);
-    renderResults(schedule, unknownPairs);
-}
+        function loadViaJSONP(sheetId, gid) {
+            var cbName = '__cb_' + Date.now();
+            var url = 'https://docs.google.com/spreadsheets/d/' + sheetId +
+                      '/gviz/tq?tqx=responseHandler:' + cbName + '&gid=' + gid;
 
-function renderResults(schedule, unknownPairs) {
-    var resultsDiv = document.getElementById('results');
-    var html = '';
+            window[cbName] = function(response) {
+                delete window[cbName];
+                var scriptEl = document.getElementById('jsonpScript');
+                if (scriptEl) scriptEl.remove();
 
-    html += '<div class="same-day-label">同日施術：';
-    if (schedule.sameDayPossible) {
-        html += '<span class="status possible">可能</span>';
-    } else {
-        html += '<span class="status impossible">不可</span>';
-    }
-    html += '</div>';
+                console.log('[施術チェック] JSONP response status:', response.status);
+                if (response.status !== 'ok') {
+                    console.warn('[施術チェック] Response not OK:', response);
+                    useFallback();
+                    return;
+                }
 
-    if (schedule.groups.length === 1) {
-        html += renderScheduleBox(schedule.groups[0].treatments);
-    } else {
-        html += '<div class="day-groups">';
-        for (var g = 0; g < schedule.groups.length; g++) {
-            var group = schedule.groups[g];
-            html += '<div class="day-group">';
-            html += '<div class="day-group-title">' + group.label + '</div>';
-            html += renderScheduleBox(group.treatments);
-            html += '</div>';
+                processSheetData(response);
+            };
+
+            var script = document.createElement('script');
+            script.id = 'jsonpScript';
+            script.src = url;
+            script.onerror = function(e) {
+                console.error('[施術チェック] JSONP script load error:', e);
+                delete window[cbName];
+                useFallback();
+            };
+            document.head.appendChild(script);
+
+            // Timeout fallback: if JSONP doesn't respond in 10 seconds, use fallback
+            setTimeout(function() {
+                if (window[cbName]) {
+                    console.warn('[施術チェック] JSONP timeout, using fallback');
+                    delete window[cbName];
+                    var scriptEl = document.getElementById('jsonpScript');
+                    if (scriptEl) scriptEl.remove();
+                    useFallback();
+                }
+            }, 10000);
         }
-        html += '</div>';
-    }
 
-    if (unknownPairs.length > 0) {
-        html += '<div class="warning-box"><strong>\u26A0 注意</strong>';
-        html += '以下の組み合わせは間隔データがありません：<br>';
-        unknownPairs.forEach(function(pair) {
-            html += '\u30FB' + getDisplayName(pair[0]) + ' \u00D7 ' + getDisplayName(pair[1]) + '<br>';
-        });
-        html += '</div>';
-    }
+        function getCellValue(cell) {
+            if (!cell) return '';
+            if (cell.v !== null && cell.v !== undefined) return String(cell.v);
+            if (cell.f !== null && cell.f !== undefined) return String(cell.f);
+            return '';
+        }
 
-    html += '<button class="detail-toggle" onclick="toggleDetail()">詳細を表示</button>';
-    html += '<div id="detail-section" class="interval-detail hidden"></div>';
+        function stripNumberPrefix(name) {
+            // Remove circled number prefixes: ①, ②, ... ㉟ or similar
+            return name.replace(/^[\s]*[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟]+[\s]*/, '').trim();
+        }
 
-    resultsDiv.innerHTML = html;
-    renderDetailTable();
-}
-
-function renderScheduleBox(treatmentGroups) {
-    var html = '<div class="schedule-box">';
-    treatmentGroups.forEach(function(group, gIdx) {
-        if (gIdx > 0) html += '<div class="arrow-down"></div>';
-        if (group.indices.length === 1) {
-            html += '<div class="treatment-item">' + getDisplayName(TREATMENTS[group.indices[0]]) + '</div>';
-        } else {
-            html += '<div class="treatment-item simultaneous">';
-            group.indices.forEach(function(idx, i) {
-                if (i > 0) html += '<span style="color:#999;margin:0 4px">\u00B7</span>';
-                html += '<span>' + getDisplayName(TREATMENTS[idx]) + '</span>';
+        function toHalfWidth(str) {
+            // Convert full-width alphanumeric to half-width
+            return str.replace(/[\uff01-\uff5e]/g, function(ch) {
+                return String.fromCharCode(ch.charCodeAt(0) - 0xfee0);
             });
-            html += '</div>';
         }
-    });
-    html += '</div>';
-    return html;
-}
 
-function toggleDetail() {
-    var section = document.getElementById('detail-section');
-    var btn = document.querySelector('.detail-toggle');
-    if (section.classList.contains('hidden')) {
-        section.classList.remove('hidden');
-        btn.textContent = '詳細を非表示';
-    } else {
-        section.classList.add('hidden');
-        btn.textContent = '詳細を表示';
-    }
-}
+        function processSheetData(response) {
+            try {
+                var table = response.table;
+                console.log('[施術チェック] Table cols:', table ? table.cols.length : 'none', 'rows:', table ? table.rows.length : 'none');
 
-function renderDetailTable() {
-    var selects = document.querySelectorAll('.selector-row select');
-    var selectedIndices = [];
-    selects.forEach(function(sel) {
-        if (sel.value !== '') {
-            var idx = parseInt(sel.value);
-            if (selectedIndices.indexOf(idx) === -1) selectedIndices.push(idx);
+                if (!table || !table.rows || table.rows.length === 0) {
+                    console.warn('[施術チェック] No table data');
+                    useFallback();
+                    return;
+                }
+
+                var rows = table.rows;
+
+                // Detect column offset: find which column has the first non-empty cell in the header row
+                // The spreadsheet may have empty column(s) at the start
+                // Strategy: find the header row (row with many non-empty cells), then detect label/data columns
+
+                // Step 1: Find the header row (row with the most non-empty cells)
+                var headerRowIdx = -1;
+                var maxNonEmpty = 0;
+                for (var r = 0; r < Math.min(5, rows.length); r++) {
+                    var nonEmpty = 0;
+                    for (var c = 0; c < rows[r].c.length; c++) {
+                        var v = getCellValue(rows[r].c[c]);
+                        if (v) nonEmpty++;
+                    }
+                    console.log('[施術チェック] Row ' + r + ' non-empty cells: ' + nonEmpty);
+                    if (nonEmpty > maxNonEmpty) {
+                        maxNonEmpty = nonEmpty;
+                        headerRowIdx = r;
+                    }
+                }
+                if (headerRowIdx === -1) headerRowIdx = 0;
+                console.log('[施術チェック] headerRowIdx=' + headerRowIdx);
+
+                // Step 2: Find the label column (the column in the header row that contains
+                // a header like "After→" or "Before↓" or just the first column with content)
+                var labelCol = -1;
+                var dataStartCol = -1;
+                for (var c = 0; c < rows[headerRowIdx].c.length; c++) {
+                    var v = getCellValue(rows[headerRowIdx].c[c]);
+                    if (v) {
+                        if (labelCol === -1) {
+                            labelCol = c;
+                        } else {
+                            dataStartCol = c;
+                            break;
+                        }
+                    }
+                }
+                if (labelCol === -1) labelCol = 0;
+                if (dataStartCol === -1) dataStartCol = labelCol + 1;
+                console.log('[施術チェック] labelCol=' + labelCol + ', dataStartCol=' + dataStartCol);
+
+                // Step 3: Extract column treatment names from header row (dataStartCol onwards)
+                var colTreatmentNames = [];
+                for (var c = dataStartCol; c < rows[headerRowIdx].c.length; c++) {
+                    var raw = getCellValue(rows[headerRowIdx].c[c]);
+                    var name = stripNumberPrefix(raw.replace(/\n/g, '').trim());
+                    colTreatmentNames.push(name);
+                }
+                console.log('[施術チェック] Column treatments:', colTreatmentNames.length, colTreatmentNames.slice(0, 3));
+
+                // Step 4: Extract row treatment names and interval data from rows after header
+                var treatments = [];
+                var intervals = [];
+
+                for (var r = headerRowIdx + 1; r < rows.length; r++) {
+                    if (!rows[r].c) continue;
+
+                    // Row label is in labelCol
+                    var rawLabel = rows[r].c[labelCol] ? getCellValue(rows[r].c[labelCol]) : '';
+                    if (!rawLabel) continue;
+
+                    // Join multi-line treatment names (newlines are just cell formatting)
+                    var treatmentName = stripNumberPrefix(rawLabel.replace(/\n/g, '').trim());
+                    if (!treatmentName) continue;
+
+                    treatments.push(treatmentName);
+
+                    var intervalRow = [];
+                    for (var c = dataStartCol; c < rows[r].c.length; c++) {
+                        var cellVal = rows[r].c[c] ? getCellValue(rows[r].c[c]) : '';
+                        var normalized = normalizeInterval(cellVal);
+                        intervalRow.push(normalized);
+                    }
+                    intervals.push(intervalRow);
+                }
+
+                console.log('[施術チェック] Parsed treatments:', treatments.length, treatments.slice(0, 5));
+                console.log('[施術チェック] Parsed intervals:', intervals.length, 'rows');
+                if (intervals.length > 0) {
+                    console.log('[施術チェック] First row sample:', intervals[0].slice(0, 5));
+                }
+
+                if (treatments.length > 0 && intervals.length > 0) {
+                    TREATMENTS = treatments;
+                    INTERVALS = intervals;
+                    dataFromSheet = true;
+                    updateDataSource('Google Sheets から読込み (' + treatments.length + '施術)');
+                    renderSelections();
+                } else {
+                    console.warn('[施術チェック] No treatments parsed, using fallback');
+                    useFallback();
+                }
+            } catch (e) {
+                console.error('[施術チェック] processSheetData error:', e);
+                useFallback();
+            }
         }
-    });
-    if (selectedIndices.length < 2) return;
 
-    var section = document.getElementById('detail-section');
-    var html = '<p style="margin-bottom:8px">選択した施行間の間隔一覧：</p>';
-    html += '<table><tr><th>先の施衣 \u2192 後の施術</th><th>必要間隔</th></tr>';
+        function normalizeInterval(val) {
+            if (val === null || val === undefined || val === '') return '-';
+            val = String(val).trim();
 
-    for (var i = 0; i < selectedIndices.length; i++) {
-        for (var j = 0; j < selectedIndices.length; j++) {
-            if (i === j) continue;
-            var first = selectedIndices[i];
-            var next = selectedIndices[j];
-            var val = getInterval(first, next);
-            html += '<tr><td>' + getDisplayName(TREATMENTS[first]) + ' \u2192 ' + getDisplayName(TREATMENTS[next]) + '</td>';
-            html += '<td>' + intervalLabel(val) + '</td></tr>';
+            // Multi-line cells: the interval is typically the first line
+            // e.g. "同日可\n②→①" or "同日可\n(部位による)\n①→②"
+            // But "同日可\n(部位による)" needs both lines
+            // Strategy: check the whole value first for key patterns, then fall back to first line
+
+            // Convert full-width alphanumeric to half-width
+            var hw = toHalfWidth(val);
+
+            // Check for 部位 (body area dependent) → 0B
+            if (hw.indexOf('同日可') !== -1 && hw.indexOf('部位') !== -1) return '0B';
+            if (hw.indexOf('同日可') !== -1 && hw.indexOf('組み合わせ') !== -1) return '0';
+
+            // Check for 同日可 anywhere
+            if (hw.indexOf('同日可') !== -1) return '0';
+
+            // Extract first line for duration check
+            var firstLine = hw.split('\n')[0].trim();
+
+            // Duration patterns (with full-width already converted)
+            if (/^1\s*[Ww]/.test(firstLine)) return '1W';
+            if (/^2\s*[Ww]/.test(firstLine)) return '2W';
+            if (/^4\s*[Ww]/.test(firstLine)) return '4W';
+            if (/^1\s*[Mm]/.test(firstLine)) return '1M';
+            if (/^3\s*[Mm]/.test(firstLine)) return '3M';
+
+            // Japanese duration
+            if (/1\s+週/.test(firstLine)) return '1W';
+            if (/2\s*週/.test(firstLine)) return '2W';
+            if (/4\s*週/.test(firstLine)) return '4W';
+            if (/1\s*[ヶか]?\s*月/.test(firstLine)) return '1M';
+            if (/3\s*[ヶか]?\s*月/.test(firstLine)) return '3M';
+
+            if (firstLine === '-' || firstLine === 'ー' || firstLine === '―' || firstLine === '–') return '-';
+
+            // If nothing matched, return '-'
+            return '-';
         }
-    }
-    html += '</table>';
-    section.innerHTML = html;
-}
 
-function resetAll() {
-    document.getElementById('selectors').innerHTML = '';
-    document.getElementById('results').innerHTML = '';
-    selectorCount = 0;
-    for (var i = 0; i < 5; i++) addSelector();
-}
+        function useFallback() {
+            TREATMENTS = [...FALLBACK_TREATMENTS];
+            INTERVALS = FALLBACK_INTERVALS.map(row => [...row]);
+            dataFromSheet = false;
+            updateDataSource('フォールバック データを使用中');
+            renderSelections();
+        }
 
-// ===== INITIALIZATION =====
-async function init() {
-    document.getElementById('loading').classList.remove('hidden');
-    document.getElementById('main-content').classList.add('hidden');
+        function updateDataSource(text) {
+            document.getElementById('dataSource').textContent = text;
+        }
 
-    await loadFromSheet();
+        function renderSelections() {
+            const container = document.getElementById('selectionsContainer');
+            container.innerHTML = '';
 
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('main-content').classList.remove('hidden');
+            for (let i = 0; i < currentSelections.length; i++) {
+                const row = document.createElement('div');
+                row.className = 'selection-row';
+                row.id = 'row-' + i;
 
-    for (var i = 0; i < 5; i++) addSelector();
-}
+                const select = document.createElement('select');
+                select.className = 'treatment-select';
+                select.id = 'select-' + i;
+                select.onchange = function() {
+                    var idx = TREATMENTS.indexOf(this.value);
+                    currentSelections[i] = idx; // -1 if placeholder selected
+                };
 
-init();
-</script>
+                const placeholderOption = document.createElement('option');
+                placeholderOption.value = '';
+                placeholderOption.textContent = '施術を選択してください';
+                placeholderOption.selected = true;
+                select.appendChild(placeholderOption);
+
+                TREATMENTS.forEach((treatment, idx) => {
+                    const option = document.createElement('option');
+                    option.value = treatment;
+                    option.textContent = treatment;
+                    if (currentSelections[i] === idx) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = function(e) {
+                    e.preventDefault();
+                    currentSelections.splice(i, 1);
+                    renderSelections();
+                };
+
+                row.appendChild(select);
+                row.appendChild(removeBtn);
+                container.appendChild(row);
+            }
+        }
+
+        function addSelection() {
+            currentSelections.push(-1);
+            renderSelections();
+        }
+
+        function resetAll() {
+            currentSelections = [-1, -1, -1, -1, -1];
+            renderSelections();
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function getInterval(firstIdx, nextIdx) {
+            if (firstIdx < 0 || nextIdx < 0) return '-';
+            if (nextIdx >= INTERVALS.length || firstIdx >= INTERVALS[nextIdx].length) return '-';
+            return INTERVALS[nextIdx][firstIdx];
+        }
+
+        function isSameDay(firstIdx, nextIdx) {
+            const interval = getInterval(firstIdx, nextIdx);
+            return interval === '0' || interval === '0B';
+        }
+
+        function findSameDayOrdering(indices) {
+            if (indices.length === 0) return [];
+            if (indices.length === 1) return indices;
+
+            const n = indices.length;
+            const graph = [];
+            const inDegree = [];
+
+            for (let i = 0; i < n; i++) {
+                graph[i] = [];
+                inDegree[i] = 0;
+            }
+
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    if (i === j) continue;
+
+                    const iCanBeforeJ = isSameDay(indices[i], indices[j]);
+                    const jCanBeforeI = isSameDay(indices[j], indices[i]);
+
+                    if (!iCanBeforeJ && !jCanBeforeI) {
+                        return null;
+                    }
+
+                    if (iCanBeforeJ && !jCanBeforeI) {
+                        graph[i].push(j);
+                        inDegree[j]++;
+                    } else if (!iCanBeforeJ && jCanBeforeI) {
+                        graph[j].push(i);
+                        inDegree[i]++;
+                    }
+                }
+            }
+
+            const queue = [];
+            for (let i = 0; i < n; i++) {
+                if (inDegree[i] === 0) {
+                    queue.push(i);
+                }
+            }
+
+            queue.sort((a, b) => {
+                const priorityA = getPriority(indices[a]);
+                const priorityB = getPriority(indices[b]);
+                return priorityA - priorityB;
+            });
+
+            const result = [];
+            while (queue.length > 0) {
+                queue.sort((a, b) => {
+                    const priorityA = getPriority(indices[a]);
+                    const priorityB = getPriority(indices[b]);
+                    return priorityA - priorityB;
+                });
+
+                const node = queue.shift();
+                result.push(indices[node]);
+
+                for (let next of graph[node]) {
+                    inDegree[next]--;
+                    if (inDegree[next] === 0) {
+                        queue.push(next);
+                    }
+                }
+            }
+
+            if (result.length !== n) {
+                return null;
+            }
+
+            return result;
+        }
+
+        function getPriority(treatmentIdx) {
+            const name = TREATMENTS[treatmentIdx];
+            if (!name) return 999;
+            // Exact match first
+            if (PRIORITY[name] !== undefined) return PRIORITY[name];
+            // Fuzzy match: check if any PRIORITY key is contained in the name or vice versa
+            var keys = Object.keys(PRIORITY);
+            for (var i = 0; i < keys.length; i++) {
+                if (name.indexOf(keys[i]) !== -1 || keys[i].indexOf(name) !== -1) {
+                    return PRIORITY[keys[i]];
+                }
+            }
+            return 999;
+        }
+
+        function orderToGroups(orderedIndices) {
+            if (orderedIndices.length === 0) return [];
+
+            const groups = [];
+            let currentGroup = [orderedIndices[0]];
+
+            for (let i = 1; i < orderedIndices.length; i++) {
+                const prevPriority = getPriority(orderedIndices[i - 1]);
+                const currPriority = getPriority(orderedIndices[i]);
+
+                if (prevPriority === currPriority) {
+                    currentGroup.push(orderedIndices[i]);
+                } else {
+                    groups.push(currentGroup);
+                    currentGroup = [orderedIndices[i]];
+                }
+            }
+
+            groups.push(currentGroup);
+            return groups;
+        }
+
+        function findBestSchedule(selectedIndices) {
+            const sameDayOrder = findSameDayOrdering(selectedIndices);
+            if (sameDayOrder !== null) {
+                return {
+                    canSameDay: true,
+                    schedule: [orderToGroups(sameDayOrder)],
+                    selectedIndices: selectedIndices
+                };
+            }
+
+            let bestSchedule = null;
+            let bestScore = Infinity;
+
+            function trySubsets(remaining, currentSchedule, currentScore) {
+                if (remaining.length === 0) {
+                    if (currentScore < bestScore) {
+                        bestScore = currentScore;
+                        bestSchedule = {
+                            canSameDay: false,
+                            schedule: currentSchedule,
+                            selectedIndices: selectedIndices
+                        };
+                    }
+                    return;
+                }
+
+                for (let mask = 1; mask < (1 << remaining.length); mask++) {
+                    const subset = [];
+                    const rest = [];
+
+                    for (let i = 0; i < remaining.length; i++) {
+                        if (mask & (1 << i)) {
+                            subset.push(remaining[i]);
+                        } else {
+                            rest.push(remaining[i]);
+                        }
+                    }
+
+                    const subsetOrder = findSameDayOrdering(subset);
+                    if (subsetOrder === null) continue;
+
+                    const subsetGroups = orderToGroups(subsetOrder);
+                    const newSchedule = [...currentSchedule, subsetGroups];
+                    // Score: 10000 per day (fewer days always wins)
+                    // + dayIndex * 100 per treatment on that day (prefer more treatments on earlier days)
+                    const dayIndex = currentSchedule.length; // 0 for first day, 1 for second, etc.
+                    const newScore = currentScore + 10000 + subset.length * dayIndex * 100;
+
+                    if (newScore < bestScore) {
+                        trySubsets(rest, newSchedule, newScore);
+                    }
+                }
+            }
+
+            trySubsets(selectedIndices, [], 0);
+
+            return bestSchedule;
+        }
+
+        function intervalToText(interval) {
+            switch (interval) {
+                case '0': return '同日可';
+                case '0B': return '同日可(部位による)';
+                case '1W': return '1週間';
+                case '2W': return '2週間';
+                case '4W': return '4週間';
+                case '1M': return '1ヶ月';
+                case '3M': return '3ヶ月';
+                default: return '-';
+            }
+        }
+
+        function dayCountFromInterval(interval) {
+            switch (interval) {
+                case '0': return 0;
+                case '0B': return 0;
+                case '1W': return 7;
+                case '2W': return 14;
+                case '4W': return 28;
+                case '1M': return 30;
+                case '3M': return 90;
+                default: return Infinity;
+            }
+        }
+
+        function checkSchedule() {
+            const selected = currentSelections.filter(idx => idx >= 0);
+
+            if (selected.length === 0) {
+                alert('施術を選択してください');
+                return;
+            }
+
+            const result = findBestSchedule(selected);
+            renderResults(result);
+        }
+
+        function renderResults(result) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status-message ' + (result.canSameDay ? 'status-ok' : 'status-ng');
+            statusDiv.textContent = result.canSameDay ? '同日施術：可能' : '同日施術：不可';
+
+            const scheduleDiv = document.createElement('div');
+            scheduleDiv.className = 'schedule-box';
+
+            const scheduleContent = document.createElement('div');
+            scheduleContent.className = 'schedule-content';
+
+            result.schedule.forEach((dayGroups, dayIdx) => {
+                const dayGroup = document.createElement('div');
+                dayGroup.className = 'day-group';
+
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'day-label';
+                if (dayIdx === 0) {
+                    dayLabel.textContent = '本日';
+                } else {
+                    let maxDays = 0;
+                    for (let i = 0; i < dayIdx; i++) {
+                        for (let groups of result.schedule[i]) {
+                            for (let idx of groups) {
+                                for (let afterIdx of result.selectedIndices) {
+                                    if (afterIdx === idx) continue;
+                                    const interval = getInterval(idx, afterIdx);
+                                    const days = dayCountFromInterval(interval);
+                                    maxDays = Math.max(maxDays, days);
+                                }
+                            }
+                        }
+                    }
+
+                    if (maxDays === 7) {
+                        dayLabel.textContent = '本日より1週間後';
+                    } else if (maxDays === 14) {
+                        dayLabel.textContent = '本日より2週間後';
+                    } else if (maxDays === 28) {
+                        dayLabel.textContent = '本日より4週間後';
+                    } else if (maxDays === 30) {
+                        dayLabel.textContent = '本日より1ヶ月後';
+                    } else if (maxDays === 90) {
+                        dayLabel.textContent = '本日より3ヶ月後';
+                    } else {
+                        dayLabel.textContent = 'Day ' + (dayIdx + 1);
+                    }
+                }
+
+                const flow = document.createElement('div');
+                flow.className = 'treatment-flow';
+
+                dayGroups.forEach((group, groupIdx) => {
+                    if (groupIdx > 0) {
+                        const arrow = document.createElement('div');
+                        arrow.className = 'arrow';
+                        arrow.textContent = '▼';
+                        flow.appendChild(arrow);
+                    }
+
+                    const treatmentText = group.map(idx => getDisplayName(TREATMENTS[idx])).join(' · ');
+                    const item = document.createElement('div');
+                    item.className = 'treatment-item group';
+                    item.textContent = treatmentText;
+                    flow.appendChild(item);
+                });
+
+                dayGroup.appendChild(dayLabel);
+                dayGroup.appendChild(flow);
+                scheduleContent.appendChild(dayGroup);
+            });
+
+            scheduleDiv.appendChild(statusDiv);
+            scheduleDiv.appendChild(scheduleContent);
+            resultsDiv.appendChild(scheduleDiv);
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'toggle-details-btn';
+            toggleBtn.textContent = '詳細を表示';
+            toggleBtn.onclick = function() {
+                const table = resultsDiv.querySelector('.details-table');
+                table.classList.toggle('show');
+                this.textContent = table.classList.contains('show') ? '詳細を非表示' : '詳細を表示';
+            };
+
+            scheduleDiv.appendChild(toggleBtn);
+
+            const table = document.createElement('table');
+            table.className = 'details-table';
+
+            const headerRow = table.insertRow();
+            headerRow.insertCell().textContent = '施術A';
+            headerRow.insertCell().textContent = '↓';
+            headerRow.insertCell().textContent = '施術B';
+            headerRow.insertCell().textContent = '必要な間隔';
+
+            const selected = result.selectedIndices;
+            for (let i = 0; i < selected.length; i++) {
+                for (let j = 0; j < selected.length; j++) {
+                    if (i === j) continue;
+
+                    const row = table.insertRow();
+                    row.insertCell().textContent = getDisplayName(TREATMENTS[selected[i]]);
+                    row.insertCell().textContent = '→';
+                    row.insertCell().textContent = getDisplayName(TREATMENTS[selected[j]]);
+                    row.insertCell().textContent = intervalToText(getInterval(selected[i], selected[j]));
+                }
+            }
+
+            scheduleDiv.appendChild(table);
+
+            let hasWarning = false;
+            for (let i = 0; i < selected.length; i++) {
+                for (let j = 0; j < selected.length; j++) {
+                    if (i !== j && getInterval(selected[i], selected[j]) === '-') {
+                        hasWarning = true;
+                        break;
+                    }
+                }
+                if (hasWarning) break;
+            }
+
+            if (hasWarning) {
+                const warning = document.createElement('div');
+                warning.className = 'warning-box';
+                warning.innerHTML = '<strong>注意:</strong> 未確認の組み合わせが含まれています。医師に確認してください。';
+                scheduleDiv.appendChild(warning);
+            }
+
+            resultsDiv.classList.add('show');
+        }
+
+        function getDisplayName(treatment) {
+            if (!treatment) return '';
+            if (SHORT_NAMES[treatment]) return SHORT_NAMES[treatment];
+            // Fuzzy match for short names
+            var keys = Object.keys(SHORT_NAMES);
+            for (var i = 0; i < keys.length; i++) {
+                if (treatment.indexOf(keys[i]) !== -1 || keys[i].indexOf(treatment) !== -1) {
+                    return SHORT_NAMES[keys[i]];
+                }
+            }
+            return treatment;
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('show');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('show');
+        }
+
+        function saveSettings() {
+            const sheetUrl = document.getElementById('sheetUrlInput').value.trim();
+
+            if (!sheetUrl) {
+                alert('Google SheetsのURLを入力してください');
+                return;
+            }
+
+            const parsed = parseSheetUrl(sheetUrl);
+            if (!parsed.sheetId) {
+                alert('正しいGoogle SheetsのURLを入力してください。\n例: https://docs.google.com/spreadsheets/d/xxxxx/edit?gid=0');
+                return;
+            }
+
+            localStorage.setItem('treatmentCheckerSettings', JSON.stringify({
+                sheetUrl: sheetUrl
+            }));
+
+            closeSettings();
+            loadData();
+        }
+
+        function resetToDefault() {
+            document.getElementById('sheetUrlInput').value = DEFAULT_SHEET_URL;
+            localStorage.removeItem('treatmentCheckerSettings');
+            closeSettings();
+            loadData();
+        }
+
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('settingsModal');
+            if (e.target === modal) {
+                closeSettings();
+            }
+        });
+    </script>
 </body>
 </html>

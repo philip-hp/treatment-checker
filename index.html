@@ -935,15 +935,48 @@
             return result;
         }
 
+        function normalizeName(s) {
+            // Remove middle dots and convert half-width katakana to full-width
+            var result = s.replace(/[・·]/g, '');
+            // Half-width katakana (U+FF65-FF9F) to full-width
+            var hwMap = {
+                'ｦ':'ヲ','ｧ':'ァ','ｨ':'ィ','ｩ':'ゥ','ｪ':'ェ','ｫ':'ォ','ｬ':'ャ','ｭ':'ュ','ｮ':'ョ','ｯ':'ッ',
+                'ｰ':'ー','ｱ':'ア','ｲ':'イ','ｳ':'ウ','ｴ':'エ','ｵ':'オ','ｶ':'カ','ｷ':'キ','ｸ':'ク','ｹ':'ケ','ｺ':'コ',
+                'ｻ':'サ','ｼ':'シ','ｽ':'ス','ｾ':'セ','ｿ':'ソ','ﾀ':'タ','ﾁ':'チ','ﾂ':'ツ','ﾃ':'テ','ﾄ':'ト',
+                'ﾅ':'ナ','ﾆ':'ニ','ﾇ':'ヌ','ﾈ':'ネ','ﾉ':'ノ','ﾊ':'ハ','ﾋ':'ヒ','ﾌ':'フ','ﾍ':'ヘ','ﾎ':'ホ',
+                'ﾏ':'マ','ﾐ':'ミ','ﾑ':'ム','ﾒ':'メ','ﾓ':'モ','ﾔ':'ヤ','ﾕ':'ユ','ﾖ':'ヨ',
+                'ﾗ':'ラ','ﾘ':'リ','ﾙ':'ル','ﾚ':'レ','ﾛ':'ロ','ﾜ':'ワ','ﾝ':'ン','ﾞ':'゛','ﾟ':'゜'
+            };
+            result = result.replace(/[\uff66-\uff9f]/g, function(ch) { return hwMap[ch] || ch; });
+            // Combine dakuten: カ゛→ガ etc.
+            result = result.replace(/([\u30A2\u30A4\u30A6\u30A8\u30AA\u30AB\u30AD\u30AF\u30B1\u30B3\u30B5\u30B7\u30B9\u30BB\u30BD\u30BF\u30C1\u30C4\u30C6\u30C8\u30CA\u30CB\u30CC\u30CD\u30CE\u30CF\u30D2\u30D5\u30D8\u30DB\u30DE\u30DF\u30E0\u30E1\u30E2\u30E4\u30E6\u30E8\u30E9\u30EA\u30EB\u30EC\u30ED\u30EF\u30F0\u30F1\u30F2\u30F3])\u309B/g, function(m, ch) {
+                return String.fromCharCode(ch.charCodeAt(0) + 1);
+            });
+            result = result.replace(/([\u30CF\u30D2\u30D5\u30D8\u30DB])\u309C/g, function(m, ch) {
+                return String.fromCharCode(ch.charCodeAt(0) + 2);
+            });
+            return result;
+        }
+
         function getPriority(treatmentIdx) {
             const name = TREATMENTS[treatmentIdx];
             if (!name) return 999;
             // Exact match first
             if (PRIORITY[name] !== undefined) return PRIORITY[name];
-            // Fuzzy match: check if any PRIORITY key is contained in the name or vice versa
+            // Normalized match: strip dots, convert half-width kana
+            var normName = normalizeName(name);
             var keys = Object.keys(PRIORITY);
             for (var i = 0; i < keys.length; i++) {
+                if (normalizeName(keys[i]) === normName) return PRIORITY[keys[i]];
+            }
+            // Fuzzy match: check if any PRIORITY key is contained in the name or vice versa
+            for (var i = 0; i < keys.length; i++) {
                 if (name.indexOf(keys[i]) !== -1 || keys[i].indexOf(name) !== -1) {
+                    return PRIORITY[keys[i]];
+                }
+                // Also try normalized fuzzy
+                var normKey = normalizeName(keys[i]);
+                if (normName.indexOf(normKey) !== -1 || normKey.indexOf(normName) !== -1) {
                     return PRIORITY[keys[i]];
                 }
             }
@@ -1207,10 +1240,19 @@
         function getDisplayName(treatment) {
             if (!treatment) return '';
             if (SHORT_NAMES[treatment]) return SHORT_NAMES[treatment];
-            // Fuzzy match for short names
+            // Normalized match
+            var normT = normalizeName(treatment);
             var keys = Object.keys(SHORT_NAMES);
             for (var i = 0; i < keys.length; i++) {
+                if (normalizeName(keys[i]) === normT) return SHORT_NAMES[keys[i]];
+            }
+            // Fuzzy match for short names
+            for (var i = 0; i < keys.length; i++) {
                 if (treatment.indexOf(keys[i]) !== -1 || keys[i].indexOf(treatment) !== -1) {
+                    return SHORT_NAMES[keys[i]];
+                }
+                var normKey = normalizeName(keys[i]);
+                if (normT.indexOf(normKey) !== -1 || normKey.indexOf(normT) !== -1) {
                     return SHORT_NAMES[keys[i]];
                 }
             }
